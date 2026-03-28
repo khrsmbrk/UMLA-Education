@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { DollarSign, FileText, Download, CheckCircle, AlertCircle, CreditCard, Plus, X } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { DollarSign, FileText, Download, CheckCircle, AlertCircle, CreditCard, Plus, X, Paperclip } from 'lucide-react';
+import { toast } from 'sonner';
+import { Transaction } from '@/types/study';
 
-const MOCK_TRANSACTIONS = [
+const MOCK_TRANSACTIONS: Transaction[] = [
   { id: '1', title: 'Pembayaran UKT Semester 3', amount: 4500000, status: 'PAID', category: 'UKT', invoiceNumber: 'INV-2026-001', createdAt: '2026-01-15' },
   { id: '2', title: 'Pembayaran UKT Semester 4', amount: 4500000, status: 'UNPAID', category: 'UKT', invoiceNumber: 'INV-2026-002', createdAt: '2026-03-01' },
   { id: '3', title: 'Denda keterlambatan', amount: 250000, status: 'PAID', category: 'Denda', invoiceNumber: 'INV-2026-003', createdAt: '2026-02-10' },
@@ -11,17 +13,48 @@ const formatCurrency = (amount: number) => new Intl.NumberFormat('id-ID', { styl
 const formatDate = (d: string) => d ? new Date(d).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
 
 export default function Finance() {
-  const [transactions] = useState(MOCK_TRANSACTIONS);
+  const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newTx, setNewTx] = useState({ title: '', amount: '', status: 'PAID', category: 'UKT', date: '' });
+  const [buktiFile, setBuktiFile] = useState<string | undefined>();
+  const [buktiPreview, setBuktiPreview] = useState<string | undefined>();
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const totalPaid = transactions.filter(t => t.status === 'PAID').reduce((s, t) => s + t.amount, 0);
   const outstanding = transactions.filter(t => t.status === 'UNPAID').reduce((s, t) => s + t.amount, 0);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) { toast.error('Ukuran file maks 2MB!'); return; }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const url = ev.target?.result as string;
+      setBuktiFile(url);
+      setBuktiPreview(url);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleAddTransaction = (e: React.FormEvent) => {
     e.preventDefault();
+    const tx: Transaction = {
+      id: Date.now().toString(),
+      title: newTx.title,
+      amount: Number(newTx.amount),
+      status: newTx.status,
+      category: newTx.category,
+      invoiceNumber: `INV-${new Date().getFullYear()}-${String(transactions.length + 1).padStart(3, '0')}`,
+      createdAt: newTx.date || new Date().toISOString().split('T')[0],
+      buktiUrl: buktiFile,
+    };
+    setTransactions([...transactions, tx]);
     setShowAddModal(false);
     setNewTx({ title: '', amount: '', status: 'PAID', category: 'UKT', date: '' });
+    setBuktiFile(undefined);
+    setBuktiPreview(undefined);
+    toast.success('Pembayaran berhasil ditambahkan!');
   };
 
   return (
@@ -71,6 +104,11 @@ export default function Finance() {
                     <span className="font-cursive">{tx.invoiceNumber}</span>
                     <span>•</span>
                     <span>{formatDate(tx.createdAt)}</span>
+                    {tx.buktiUrl && (
+                      <button onClick={() => setLightboxUrl(tx.buktiUrl!)} className="flex items-center gap-1 text-blue-600 hover:underline ml-1">
+                        <Paperclip className="w-3 h-3" /> Ada Bukti
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -83,10 +121,11 @@ export default function Finance() {
         </div>
       </div>
 
+      {/* Add Modal */}
       {showAddModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"><X className="w-6 h-6" /></button>
+            <button onClick={() => { setShowAddModal(false); setBuktiFile(undefined); setBuktiPreview(undefined); }} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"><X className="w-6 h-6" /></button>
             <h2 className="text-2xl font-black italic mb-6">TAMBAH PEMBAYARAN</h2>
             <form onSubmit={handleAddTransaction} className="space-y-4">
               <div>
@@ -114,8 +153,35 @@ export default function Finance() {
                   </select>
                 </div>
               </div>
+              <div>
+                <label className="block text-sm font-bold text-muted-foreground mb-1">Tanggal</label>
+                <input type="date" value={newTx.date} onChange={e => setNewTx({ ...newTx, date: e.target.value })} className="input-brutal" />
+              </div>
+
+              {/* Bukti Pembayaran */}
+              <div>
+                <label className="block text-sm font-bold text-muted-foreground mb-1">Bukti Pembayaran (Opsional)</label>
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="input-brutal text-sm file:mr-3 file:border-0 file:bg-accent file:px-3 file:py-1 file:font-bold file:text-sm" />
+                <p className="text-xs text-muted-foreground mt-1">Format: JPG, PNG. Maks 2MB.</p>
+                {buktiPreview && (
+                  <div className="mt-2">
+                    <img src={buktiPreview} alt="Preview bukti" className="w-[100px] h-[100px] object-cover border-drawn rounded" />
+                  </div>
+                )}
+              </div>
+
               <button type="submit" className="w-full mt-4 btn-primary py-3 text-lg">SIMPAN</button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightboxUrl && (
+        <div className="modal-overlay" onClick={() => setLightboxUrl(null)}>
+          <div className="relative max-w-3xl max-h-[90vh] p-2" onClick={e => e.stopPropagation()}>
+            <button onClick={() => setLightboxUrl(null)} className="absolute -top-2 -right-2 z-10 w-8 h-8 bg-card border-drawn rounded-full flex items-center justify-center"><X className="w-5 h-5" /></button>
+            <img src={lightboxUrl} alt="Bukti pembayaran" className="max-w-full max-h-[85vh] object-contain border-drawn bg-card" />
           </div>
         </div>
       )}
