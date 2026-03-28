@@ -64,18 +64,23 @@
 }
 
 @layer components {
+  .bg-dot-pattern {
+    background-image: radial-gradient(hsl(var(--muted-foreground) / 0.15) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+  }
+
   .font-cursive {
     font-family: 'Caveat', cursive;
   }
 
   .border-drawn {
     border: 2px solid hsl(var(--navy));
-    border-radius: 0;
+    border-radius: 2px 255px 3px 25px / 255px 5px 225px 3px;
   }
 
   .border-drawn-2 {
     border: 2px solid hsl(var(--navy));
-    border-radius: 0;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   }
 
   .shadow-brutal {
