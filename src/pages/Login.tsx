@@ -31,7 +31,7 @@ export default function Login() {
         setSuccessMsg('Registrasi berhasil! Silakan login.');
         setIsRegistering(false);
       } else {
-        navigate('/dashboard');
+        navigate('/app/dashboard');
       }
     }, 800);
   };

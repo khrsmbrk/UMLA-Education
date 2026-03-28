@@ -32,21 +32,26 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route element={<Layout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/grades" element={<Ujian />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/stats" element={<Stats />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/finance" element={<Finance />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/notes" element={<Notes />} />
-            <Route path="/exams" element={<Exams />} />
-            <Route path="/schedule" element={<Schedule />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/assignments" element={<Assignments />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/app" element={<Layout />}>
+            <Route index element={<Navigate to="/app/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="ujian" element={<Ujian />} />
+            <Route path="tasks" element={<Tasks />} />
+            <Route path="stats" element={<Stats />} />
+            <Route path="resources" element={<Resources />} />
+            <Route path="finance" element={<Finance />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="notes" element={<Notes />} />
+            <Route path="exams" element={<Exams />} />
+            <Route path="schedule" element={<Schedule />} />
+            <Route path="courses" element={<Courses />} />
+            <Route path="assignments" element={<Assignments />} />
+            <Route path="leaderboard" element={<Leaderboard />} />
           </Route>
+          {/* Legacy routes redirect */}
+          <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
+          <Route path="/grades" element={<Navigate to="/app/ujian" replace />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
