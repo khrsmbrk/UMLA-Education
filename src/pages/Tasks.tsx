@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { CheckCircle, Plus, Calendar as CalendarIcon, X } from 'lucide-react';
 
 const MOCK_TASKS = [
-  { id: '1', title: 'Baca Chapter 7 - Data Structures', course: { name: 'Struktur Data' }, priority: 'HIGH', status: 'NOT_STARTED', dueDate: '2026-03-25' },
-  { id: '2', title: 'Kerjakan tugas SQL query', course: { name: 'Basis Data' }, priority: 'MEDIUM', status: 'NOT_STARTED', dueDate: '2026-03-28' },
-  { id: '3', title: 'Review materi UTS Kalkulus', course: null, priority: 'HIGH', status: 'COMPLETED', dueDate: '2026-03-20' },
-  { id: '4', title: 'Submit laporan praktikum', course: { name: 'Fisika Dasar' }, priority: 'LOW', status: 'NOT_STARTED', dueDate: '2026-04-01' },
+  { id: '1', title: 'Get Practical Review From Teacher', course: { name: 'Manajemen Pelayanan Farmasi' }, priority: 'HIGH', status: 'NOT_STARTED', dueDate: '2026-04-01' },
+  { id: '2', title: 'Update Project Documentation', course: { name: 'Manajemen Promosi Kesehatan' }, priority: 'HIGH', status: 'NOT_STARTED', dueDate: '2026-04-02' },
+  { id: '3', title: 'Prepare Quarterly Report', course: null, priority: 'MEDIUM', status: 'IN_PROGRESS', dueDate: '2026-04-04' },
 ];
 
 export default function Tasks() {

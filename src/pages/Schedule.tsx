@@ -4,14 +4,7 @@ import { Calendar as CalendarIcon, Clock, MapPin, User, ChevronRight, Star, Plus
 const DAYS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 const COLORS = ['bg-blue-100', 'bg-accent/50', 'bg-green-100', 'bg-purple-100', 'bg-orange-100'];
 
-const MOCK_SCHEDULE = [
-  { id: '1', dayOfWeek: 'MONDAY', startTime: '08:00', endTime: '10:00', location: 'Room 301', type: 'ON-SITE', course: { name: 'Struktur Data', code: 'IF301' } },
-  { id: '2', dayOfWeek: 'MONDAY', startTime: '13:00', endTime: '15:00', location: null, type: 'ONLINE', course: { name: 'Basis Data', code: 'IF204' } },
-  { id: '3', dayOfWeek: 'TUESDAY', startTime: '08:00', endTime: '10:00', location: 'Lab Komputer', type: 'ON-SITE', course: { name: 'Algoritma & Pemrograman', code: 'IF201' } },
-  { id: '4', dayOfWeek: 'WEDNESDAY', startTime: '10:00', endTime: '12:00', location: 'Room 205', type: 'ON-SITE', course: { name: 'Kalkulus II', code: 'MA102' } },
-  { id: '5', dayOfWeek: 'THURSDAY', startTime: '08:00', endTime: '10:00', location: null, type: 'ONLINE', course: { name: 'Fisika Dasar', code: 'FI101' } },
-  { id: '6', dayOfWeek: 'FRIDAY', startTime: '13:00', endTime: '15:00', location: 'Room 102', type: 'ON-SITE', course: { name: 'Bahasa Inggris', code: 'EN101' } },
-];
+const MOCK_SCHEDULE: any[] = [];
 
 export default function Schedule() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +12,7 @@ export default function Schedule() {
 
   const groupedSchedule = DAYS.map(day => ({
     day,
-    classes: MOCK_SCHEDULE.filter(s => s.dayOfWeek === day),
+    classes: MOCK_SCHEDULE.filter((s: any) => s.dayOfWeek === day),
   })).filter(g => g.classes.length > 0);
 
   const handleCreateSlot = (e: React.FormEvent) => {
@@ -33,7 +26,7 @@ export default function Schedule() {
       <div className="page-header">
         <div>
           <h1 className="page-title"><CalendarIcon className="w-8 h-8 text-blue-600" /> CLASS SCHEDULE</h1>
-          <p className="page-subtitle">Odd Semester 2025/2026 📅</p>
+          <p className="page-subtitle">Genap Semester 2025/2026 📅</p>
         </div>
         <div className="flex flex-col items-end gap-2">
           <div className="hidden md:block text-right">
@@ -46,6 +39,14 @@ export default function Schedule() {
         </div>
       </div>
 
+      {groupedSchedule.length === 0 && (
+        <div className="bg-card p-12 border-drawn shadow-sm text-center animate-fade-up">
+          <Star className="w-12 h-12 text-accent mx-auto mb-4" />
+          <h3 className="font-black text-2xl italic mb-2">No classes scheduled.</h3>
+          <p className="font-cursive text-xl text-muted-foreground">Enjoy your free time!</p>
+        </div>
+      )}
+
       <div className="space-y-12">
         {groupedSchedule.map((daySchedule, idx) => (
           <div key={idx} className="relative animate-fade-up" style={{ animationDelay: `${idx * 100}ms` }}>
@@ -54,7 +55,7 @@ export default function Schedule() {
               <div className="flex-1 border-b-2 border-dashed border-muted" />
             </div>
             <div className="grid md:grid-cols-2 gap-6 pl-4 md:pl-8 border-l-2 border-foreground ml-4">
-              {daySchedule.classes.map((cls, cIdx) => (
+              {daySchedule.classes.map((cls: any, cIdx: number) => (
                 <div key={cls.id} className="bg-card p-6 border-drawn shadow-brutal-sm relative group hover:-translate-y-1 transition-transform cursor-pointer">
                   <div className={`absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 ${COLORS[cIdx % COLORS.length]} opacity-80 transform ${cIdx % 2 === 0 ? 'rotate-2' : '-rotate-2'}`} />
                   <div className="flex justify-between items-start mb-4">
@@ -78,14 +79,6 @@ export default function Schedule() {
           </div>
         ))}
       </div>
-
-      {groupedSchedule.length < 5 && (
-        <div className="mt-12 bg-blue-100 p-8 border-drawn shadow-brutal-sm text-center relative animate-fade-up" style={{ animationDelay: '500ms' }}>
-          <Star className="w-12 h-12 text-blue-500 mx-auto mb-4" />
-          <h3 className="font-black text-2xl italic mb-2">FREE DAYS!</h3>
-          <p className="font-cursive text-xl text-muted-foreground">You have some free days. Time to work on those assignments!</p>
-        </div>
-      )}
 
       {isModalOpen && (
         <div className="modal-overlay">

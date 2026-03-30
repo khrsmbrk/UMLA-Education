@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Key, ArrowRight } from 'lucide-react';
+import campusLab from '@/assets/campus-lab.jpg';
+import campusLobby from '@/assets/campus-lobby.jpg';
+import campusGraduation from '@/assets/campus-graduation.jpg';
 
 export default function Landing() {
   return (
@@ -39,7 +42,7 @@ export default function Landing() {
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-pink-200/80 transform rotate-2" />
             <h2 className="text-3xl font-black mb-4">Sistem <span className="text-destructive">CBT</span></h2>
             <p className="text-muted-foreground mb-8 font-medium leading-relaxed text-left">
-              Ujian berbasis komputer yang transparan, efisien, dan anti-ribet. Pantau hasil secara real-time.
+              Ujian berbasis komputer yang transparan, efisien, dan anti-ribet. Pantau hasil secara real-time langsung dari dashboard kamu.
             </p>
             <div className="text-left">
               <Link to="/login" className="inline-flex items-center border-drawn px-6 py-2 font-bold hover:bg-foreground hover:text-primary-foreground transition-colors">
@@ -52,11 +55,33 @@ export default function Landing() {
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-accent/80 transform -rotate-2" />
             <h2 className="text-3xl font-black mb-4">Digital <span className="text-amber-500">E-Learning</span></h2>
             <p className="text-muted-foreground mb-8 font-medium leading-relaxed text-left">
-              Materi kuliah, diskusi interaktif, dan penugasan dalam satu genggaman.
+              Materi kuliah, diskusi interaktif, dan penugasan dalam satu genggaman. Belajar di mana saja, kapan saja dengan UMLA Learning Hub.
             </p>
             <div className="text-left">
               <Link to="/login" className="btn-primary inline-flex items-center">Mulai Belajar Now!</Link>
             </div>
+          </div>
+        </div>
+
+        {/* Campus Photos Section */}
+        <div className="mt-32 w-full max-w-5xl animate-fade-up" style={{ animationDelay: '150ms' }}>
+          <h2 className="text-4xl font-black mb-12 text-left">
+            KESERUAN DI <span className="text-accent">KAMPUS</span>
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { img: campusLab, caption: 'Lab Session Lab', rotate: '-rotate-2' },
+              { img: campusLobby, caption: 'Lobby Hangout', rotate: 'rotate-1' },
+              { img: campusGraduation, caption: 'Graduation Day!', rotate: '-rotate-1' },
+            ].map((photo, i) => (
+              <div key={i} className={`bg-card p-4 pb-8 border-drawn shadow-xl transform ${photo.rotate} hover:rotate-0 transition-transform`}>
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-orange-200/80 transform rotate-2" />
+                <div className="aspect-square overflow-hidden border-drawn mb-4">
+                  <img src={photo.img} alt={photo.caption} loading="lazy" width={640} height={640} className="w-full h-full object-cover" />
+                </div>
+                <p className="font-cursive text-xl text-center text-orange-500">{photo.caption}</p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -65,7 +90,7 @@ export default function Landing() {
           <div className="bg-accent p-10 max-w-md mx-auto shadow-2xl transform rotate-1 relative">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-destructive rounded-full shadow-md border-2 border-red-800" />
             <h3 className="text-3xl font-black mb-4">Siap Bergabung?</h3>
-            <p className="font-medium mb-8 text-left">Jangan lewatkan kesempatan untuk menjadi bagian dari generasi cerdas UMLA.</p>
+            <p className="font-medium mb-8 text-left">Jangan lewatkan kesempatan untuk menjadi bagian dari generasi cerdas UMLA. Pendaftaran periode ini masih dibuka!</p>
             <button className="w-full btn-primary py-4 text-lg">DAFTAR SEKARANG</button>
             <p className="font-cursive text-xl mt-4 text-right">Limited slots available!</p>
           </div>
@@ -74,7 +99,7 @@ export default function Landing() {
 
       <footer className="border-t-2 border-dashed border-foreground mt-20 py-8">
         <div className="container mx-auto px-4 flex flex-col items-center">
-          <p className="text-xs font-bold tracking-widest uppercase mb-6">© 2026 UNIVERSITAS MUHAMMADIYAH LAMONGAN</p>
+          <p className="text-xs font-bold tracking-widest uppercase mb-6">© 2023 UNIVERSITAS MUHAMMADIYAH LAMONGAN</p>
           <div className="flex space-x-4">
             <div className="w-6 h-6 rounded-full bg-teal-200 border-drawn" />
             <div className="w-6 h-6 rounded-full bg-accent border-drawn" />
