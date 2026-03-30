@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Key, BookOpen, Mail } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Key, BookOpen, Mail, Globe, FileEdit, Monitor, Database } from 'lucide-react';
+import campusGraduation from '@/assets/campus-graduation.jpg';
 
 function UserIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -14,12 +15,10 @@ export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [isRegistering, setIsRegistering] = useState(false);
+  const [staySignedIn, setStaySignedIn] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,18 +26,14 @@ export default function Login() {
     setErrorMsg('');
     setTimeout(() => {
       setIsLoading(false);
-      if (isRegistering) {
-        setSuccessMsg('Registrasi berhasil! Silakan login.');
-        setIsRegistering(false);
-      } else {
-        navigate('/app/dashboard');
-      }
+      navigate('/app/dashboard');
     }, 800);
   };
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground relative overflow-hidden flex flex-col">
-      <header className="p-6 flex justify-between items-center bg-card border-b-2 border-foreground shadow-sm z-10">
+      {/* Header with nav links */}
+      <header className="p-4 md:p-6 flex justify-between items-center bg-card border-b-2 border-foreground shadow-sm z-10">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-orange-500 rounded-sm flex items-center justify-center text-white font-bold border-drawn transform -rotate-3">
             <BookOpen className="w-6 h-6" />
@@ -48,7 +43,27 @@ export default function Login() {
             <p className="text-[10px] tracking-widest uppercase text-muted-foreground">Universitas Muhammadiyah Lamongan</p>
           </div>
         </div>
+        <div className="hidden md:flex items-center gap-6">
+          <a href="https://exam.umla.ac.id" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm font-bold hover:text-orange-500 transition-colors">
+            <FileEdit className="w-4 h-4" /> Exams
+          </a>
+          <a href="https://elearningmu.umla.ac.id" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm font-bold hover:text-orange-500 transition-colors">
+            <Monitor className="w-4 h-4" /> E-Learning
+          </a>
+          <a href="https://siak.umla.ac.id" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm font-bold hover:text-orange-500 transition-colors">
+            <Database className="w-4 h-4" /> SIAK
+          </a>
+          <button className="p-2 hover:bg-muted rounded transition-colors">
+            <Globe className="w-4 h-4" />
+          </button>
+        </div>
       </header>
+
+      {/* Announcement Bar */}
+      <div className="bg-accent/80 py-2 px-4 text-center text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-foreground/20">
+        <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">Akademik</span>
+        <span>Jadwal Ujian Akhir Semester – UAS akan dimulai minggu depan.</span>
+      </div>
 
       <main className="flex-1 flex items-center justify-center p-4 relative">
         <div className="absolute top-10 left-1/4 w-32 h-8 bg-orange-300/60 transform -rotate-6 z-0" />
@@ -63,8 +78,8 @@ export default function Login() {
                 <span>Student Access</span>
                 <div className="w-3 h-3 rounded-full bg-white border border-foreground" />
               </div>
-              <div className="aspect-square bg-muted border-drawn mb-4 flex items-center justify-center">
-                <UserIcon className="w-16 h-16 text-muted-foreground/30" />
+              <div className="aspect-square bg-muted border-drawn mb-4 overflow-hidden">
+                <img src={campusGraduation} alt="Campus graduation" className="w-full h-full object-cover" />
               </div>
               <p className="font-cursive text-xl text-center text-orange-500">Academic Passport</p>
             </div>
@@ -80,34 +95,28 @@ export default function Login() {
                 <span className="text-[8px] font-mono text-blue-800 tracking-widest">UMLA • UMLA</span>
               </div>
 
+              <div className="mb-2">
+                <Link to="/" className="text-sm text-muted-foreground hover:text-foreground font-medium">← Portal UMLA</Link>
+              </div>
+
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h2 className="text-4xl font-black mb-1">{isRegistering ? 'Register' : 'Sign In'}</h2>
-                  <p className="font-cursive text-xl text-muted-foreground">{isRegistering ? 'Join our digital world.' : 'Access your digital world.'}</p>
+                  <h2 className="text-4xl font-black mb-1">Sign In</h2>
+                  <p className="font-cursive text-xl text-muted-foreground">Access your digital world.</p>
                 </div>
                 <div className="w-10 h-10 bg-orange-100 border-drawn rounded-sm flex items-center justify-center transform rotate-6">
                   <Key className="w-5 h-5 text-orange-500" />
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {errorMsg && <div className="bg-red-100 border-2 border-destructive text-destructive p-3 font-bold text-sm">{errorMsg}</div>}
-                {successMsg && <div className="bg-green-100 border-2 border-green-500 text-green-700 p-3 font-bold text-sm">{successMsg}</div>}
-
-                {isRegistering && (
-                  <>
-                    <div>
-                      <label className="inline-block bg-orange-200 px-2 py-1 text-sm font-bold border-drawn transform -rotate-1 mb-2">Full Name</label>
-                      <input type="text" required value={name} onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-transparent border-b-2 border-foreground border-dashed py-2 focus:outline-none focus:border-solid font-cursive text-2xl placeholder:text-muted-foreground/40" placeholder="Your full name..." />
-                    </div>
-                    <div>
-                      <label className="inline-block bg-blue-200 px-2 py-1 text-sm font-bold border-drawn transform rotate-1 mb-2">Email</label>
-                      <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-transparent border-b-2 border-foreground border-dashed py-2 focus:outline-none focus:border-solid font-cursive text-2xl placeholder:text-muted-foreground/40" placeholder="Your email..." />
-                    </div>
-                  </>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {errorMsg && (
+                  <div className="bg-red-50 border-2 border-destructive text-destructive p-3 font-bold text-sm rounded">
+                    <p>{errorMsg}</p>
+                    <p className="text-xs font-medium mt-1">Butuh bantuan? <Link to="/help" className="underline">Lihat Help Center</Link></p>
+                  </div>
                 )}
+                {successMsg && <div className="bg-green-100 border-2 border-green-500 text-green-700 p-3 font-bold text-sm">{successMsg}</div>}
 
                 <div>
                   <label className="inline-block bg-orange-200 px-2 py-1 text-sm font-bold border-drawn transform -rotate-1 mb-2">Username</label>
@@ -118,23 +127,39 @@ export default function Login() {
                   <label className="inline-block bg-blue-200 px-2 py-1 text-sm font-bold border-drawn transform rotate-1 mb-2">Secret Password</label>
                   <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
                     className="w-full bg-transparent border-b-2 border-foreground border-dashed py-2 focus:outline-none focus:border-solid font-cursive text-2xl placeholder:text-muted-foreground/40" placeholder="Your secret key..." />
+                  <div className="text-right mt-1">
+                    <button type="button" className="text-sm font-bold text-orange-500 hover:underline">Forgot your key?</button>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input type="checkbox" id="staySignedIn" checked={staySignedIn} onChange={(e) => setStaySignedIn(e.target.checked)} className="w-4 h-4 border-drawn" />
+                  <label htmlFor="staySignedIn" className="text-sm font-medium">Stay signed in</label>
                 </div>
 
                 <button type="submit" disabled={isLoading}
-                  className="w-full bg-orange-500 text-white font-black text-xl py-4 border-drawn shadow-brutal-sm hover:translate-y-1 transition-all disabled:opacity-70 mt-4 active:scale-[0.97]">
-                  {isLoading ? 'Loading...' : (isRegistering ? 'Register Now' : 'Enter My UMLA')}
+                  className="w-full bg-orange-500 text-white font-black text-xl py-4 border-drawn shadow-brutal-sm hover:translate-y-1 transition-all disabled:opacity-70 active:scale-[0.97]">
+                  {isLoading ? 'Loading...' : 'Enter My UMLA'}
                 </button>
 
                 <div className="text-center mt-4">
-                  <button type="button" onClick={() => { setIsRegistering(!isRegistering); setErrorMsg(''); setSuccessMsg(''); }}
-                    className="font-bold text-muted-foreground hover:text-foreground transition-colors">
-                    {isRegistering ? 'Already have an account? Sign In' : 'Need an account? Register'}
-                  </button>
+                  <Link to="/register" className="font-bold text-muted-foreground hover:text-foreground transition-colors">
+                    Need an account? Register
+                  </Link>
                 </div>
               </form>
             </div>
 
-            <div className="absolute -bottom-10 -left-10 bg-accent p-4 border-drawn shadow-lg transform -rotate-6 w-48 z-20">
+            {/* Welcome sticky note */}
+            <div className="flex justify-center mt-4">
+              <div className="bg-accent px-8 py-3 border-drawn shadow-lg transform rotate-1 relative inline-block">
+                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-destructive rounded-full shadow-md border-2 border-red-800" />
+                <p className="font-cursive text-xl">Welcome!</p>
+              </div>
+            </div>
+
+            {/* Reminder */}
+            <div className="absolute -bottom-16 -left-10 bg-accent p-4 border-drawn shadow-lg transform -rotate-6 w-48 z-20 hidden md:block">
               <div className="w-2 h-2 rounded-full bg-destructive mx-auto mb-2" />
               <p className="text-xs font-bold uppercase mb-1">Reminder:</p>
               <p className="font-cursive text-sm leading-tight">Midterms start next Monday! Check your exam schedule.</p>
@@ -145,9 +170,9 @@ export default function Login() {
           <div className="hidden md:flex flex-col items-center gap-8 mt-4">
             <div className="bg-card p-4 pb-8 border-drawn shadow-xl transform rotate-3 relative w-64">
               <div className="absolute -top-3 right-4 w-12 h-6 bg-blue-200/80 transform -rotate-6" />
-              <div className="aspect-square bg-muted border-drawn mb-4 flex items-center justify-center">
-                <div className="w-16 h-16 bg-muted flex items-center justify-center">
-                  <div className="w-8 h-8 border-4 border-muted-foreground/20 rounded-full" />
+              <div className="aspect-square bg-muted border-drawn mb-4 flex items-center justify-center overflow-hidden">
+                <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+                  <span className="font-cursive text-6xl text-blue-300">🏫</span>
                 </div>
               </div>
               <p className="font-cursive text-xl text-center">Campus Vibes ✨</p>
@@ -159,10 +184,11 @@ export default function Login() {
         </div>
       </main>
 
-      <footer className="py-6 flex flex-col items-center z-10 relative">
-        <div className="bg-card border-drawn px-6 py-3 mb-6 flex items-center gap-3 shadow-[2px_2px_0px_0px_hsl(var(--navy))]">
-          <Mail className="w-5 h-5 text-orange-500" />
-          <span className="font-medium">Need help? <a href="mailto:it-support@umla.ac.id" className="text-orange-500 font-bold hover:underline">it-support@umla.ac.id</a></span>
+      <footer className="py-6 flex flex-col items-center z-10 relative border-t border-muted">
+        <p className="text-xs text-muted-foreground mb-3">© 2026 Universitas Muhammadiyah Lamongan. All rights reserved.</p>
+        <div className="flex items-center gap-6">
+          <Link to="/privacy-policy" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">Privacy Policy</Link>
+          <Link to="/terms-of-use" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">Terms of Use</Link>
         </div>
       </footer>
     </div>

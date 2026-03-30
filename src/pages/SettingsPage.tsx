@@ -4,11 +4,6 @@ import { toast } from 'sonner';
 import { Announcement } from '@/types/study';
 import { getAnnouncements, saveAnnouncements, getProfile, saveProfile } from '@/lib/mockStore';
 
-const MOCK_PENDING = [
-  { id: '1', name: 'Ahmad Fauzi', username: 'ahmadf', email: 'ahmad@student.ac.id' },
-  { id: '2', name: 'Siti Rahma', username: 'sitirahma', email: 'siti@student.ac.id' },
-];
-
 const KATEGORI_OPTIONS: Announcement['kategori'][] = ['Akademik', 'Umum', 'Keuangan', 'Sistem'];
 
 function getToday() {
@@ -16,7 +11,11 @@ function getToday() {
 }
 
 export default function SettingsPage() {
-  const [pendingUsers, setPendingUsers] = useState(MOCK_PENDING);
+  // === User Approval ===
+  const [pendingUsers, setPendingUsers] = useState<any[]>([]);
+  const [activeUsers] = useState([
+    { id: '1', name: 'Ahmad Fauzi', nim: 'ahmadfauzi', email: 'demo@example.com', joinedAt: '30 Maret 2026' },
+  ]);
 
   // === Account Settings ===
   const [profile, setProfile] = useState(getProfile());
@@ -116,8 +115,76 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* === PERSETUJUAN PENGGUNA BARU === */}
+      <div className="card-brutal p-6 md:p-8 mb-8 animate-fade-up">
+        <div className="flex items-center gap-3 mb-2 pb-4 border-b-2 border-dashed border-muted">
+          <Users className="w-6 h-6 text-orange-500" />
+          <h2 className="text-2xl font-black italic">PERSETUJUAN PENGGUNA BARU</h2>
+        </div>
+        <p className="text-sm text-muted-foreground mb-4">Daftar pengguna yang mendaftar dan menunggu persetujuan Super Admin.</p>
+        <div className="border-drawn overflow-hidden">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-muted border-b-2 border-foreground">
+                <th className="p-4 font-black text-sm uppercase tracking-wider">Nama</th>
+                <th className="p-4 font-black text-sm uppercase tracking-wider hidden sm:table-cell">NIM</th>
+                <th className="p-4 font-black text-sm uppercase tracking-wider hidden md:table-cell">Email</th>
+                <th className="p-4 font-black text-sm uppercase tracking-wider text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingUsers.length === 0 ? (
+                <tr><td colSpan={4} className="p-8 text-center text-muted-foreground font-medium italic">Tidak ada pengguna yang menunggu persetujuan.</td></tr>
+              ) : pendingUsers.map((user: any, i: number) => (
+                <tr key={user.id} className={`hover:bg-muted transition-colors ${i < pendingUsers.length - 1 ? 'border-b border-muted' : ''}`}>
+                  <td className="p-4 font-bold text-foreground">{user.name}</td>
+                  <td className="p-4 font-mono text-sm text-muted-foreground hidden sm:table-cell">{user.nim}</td>
+                  <td className="p-4 font-mono text-sm text-muted-foreground hidden md:table-cell">{user.email}</td>
+                  <td className="p-4 text-right">
+                    <button onClick={() => handleApproveUser(user.id)} className="p-2 bg-green-100 text-green-600 hover:bg-green-200 transition-colors border-drawn active:scale-95" title="Setujui">
+                      <CheckCircle className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* === PENGGUNA AKTIF === */}
+      <div className="card-brutal p-6 md:p-8 mb-8 animate-fade-up" style={{ animationDelay: '50ms' }}>
+        <div className="flex items-center gap-3 mb-2 pb-4 border-b-2 border-dashed border-muted">
+          <Users className="w-6 h-6 text-green-500" />
+          <h2 className="text-2xl font-black italic">PENGGUNA AKTIF</h2>
+        </div>
+        <p className="text-sm text-muted-foreground mb-4">Daftar pengguna yang telah disetujui dan aktif dalam sistem.</p>
+        <div className="border-drawn overflow-hidden">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-muted border-b-2 border-foreground">
+                <th className="p-4 font-black text-sm uppercase tracking-wider">Nama</th>
+                <th className="p-4 font-black text-sm uppercase tracking-wider hidden sm:table-cell">NIM</th>
+                <th className="p-4 font-black text-sm uppercase tracking-wider hidden md:table-cell">Email</th>
+                <th className="p-4 font-black text-sm uppercase tracking-wider hidden md:table-cell">Tanggal Bergabung</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activeUsers.map((user, i) => (
+                <tr key={user.id} className={`hover:bg-muted transition-colors ${i < activeUsers.length - 1 ? 'border-b border-muted' : ''}`}>
+                  <td className="p-4 font-bold text-foreground">{user.name}</td>
+                  <td className="p-4 font-mono text-sm text-muted-foreground hidden sm:table-cell">{user.nim}</td>
+                  <td className="p-4 font-mono text-sm text-muted-foreground hidden md:table-cell">{user.email}</td>
+                  <td className="p-4 text-sm text-muted-foreground hidden md:table-cell">{user.joinedAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* === PENGATURAN AKUN === */}
-      <div className="card-brutal p-6 md:p-8 animate-fade-up mb-8">
+      <div className="card-brutal p-6 md:p-8 animate-fade-up mb-8" style={{ animationDelay: '100ms' }}>
         <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-dashed border-muted">
           <User className="w-6 h-6 text-blue-500" />
           <h2 className="text-2xl font-black italic">PENGATURAN AKUN</h2>
@@ -171,42 +238,6 @@ export default function SettingsPage() {
             <p className="font-medium">Login terakhir: {new Date().toLocaleDateString('id-ID')} {new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} | Device: Chrome / Web</p>
           </div>
           <button onClick={handleLogoutAll} className="btn-secondary flex items-center gap-2 text-destructive"><LogOut className="w-4 h-4" /> LOGOUT SEMUA SESI</button>
-        </div>
-      </div>
-
-      {/* === PERSETUJUAN PENGGUNA === */}
-      <div className="card-brutal p-6 md:p-8 mb-8 animate-fade-up" style={{ animationDelay: '100ms' }}>
-        <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-dashed border-muted">
-          <Users className="w-6 h-6 text-orange-500" />
-          <h2 className="text-2xl font-black italic">PERSETUJUAN PENGGUNA</h2>
-        </div>
-        <div className="border-drawn overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-muted border-b-2 border-foreground">
-                <th className="p-4 font-black text-sm uppercase tracking-wider">Nama</th>
-                <th className="p-4 font-black text-sm uppercase tracking-wider hidden sm:table-cell">Username</th>
-                <th className="p-4 font-black text-sm uppercase tracking-wider hidden md:table-cell">Email</th>
-                <th className="p-4 font-black text-sm uppercase tracking-wider text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pendingUsers.length === 0 ? (
-                <tr><td colSpan={4} className="p-8 text-center text-muted-foreground font-medium italic">Tidak ada pengguna menunggu.</td></tr>
-              ) : pendingUsers.map((user, i) => (
-                <tr key={user.id} className={`hover:bg-muted transition-colors ${i < pendingUsers.length - 1 ? 'border-b border-muted' : ''}`}>
-                  <td className="p-4 font-bold text-foreground">{user.name}</td>
-                  <td className="p-4 font-mono text-sm text-muted-foreground hidden sm:table-cell">{user.username}</td>
-                  <td className="p-4 font-mono text-sm text-muted-foreground hidden md:table-cell">{user.email}</td>
-                  <td className="p-4 text-right">
-                    <button onClick={() => handleApproveUser(user.id)} className="p-2 bg-green-100 text-green-600 hover:bg-green-200 transition-colors border-drawn active:scale-95" title="Setujui">
-                      <CheckCircle className="w-5 h-5" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </div>
 
