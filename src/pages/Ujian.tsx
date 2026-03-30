@@ -22,28 +22,12 @@ function scoreFromGrade(g: string): number {
 
 const INITIAL_SEMESTERS: Semester[] = [
   {
-    semester: '1', gpa: '3.65',
+    semester: '4', gpa: '3.80',
     records: [
-      { id: '1', matkul: 'Kalkulus I', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
-      { id: '2', matkul: 'Fisika Dasar', sks: 3, grade: 'A-', score: 3.7, nilaiAngka: 82, nilaiHuruf: 'A-' },
-      { id: '3', matkul: 'Pengantar Informatika', sks: 3, grade: 'B+', score: 3.3, nilaiAngka: 77, nilaiHuruf: 'B+' },
-      { id: '4', matkul: 'Bahasa Inggris', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 92, nilaiHuruf: 'A' },
-    ],
-  },
-  {
-    semester: '2', gpa: '3.72',
-    records: [
-      { id: '5', matkul: 'Kalkulus II', sks: 3, grade: 'A-', score: 3.7, nilaiAngka: 83, nilaiHuruf: 'A-' },
-      { id: '6', matkul: 'Algoritma & Pemrograman', sks: 4, grade: 'A', score: 4.0, nilaiAngka: 95, nilaiHuruf: 'A' },
-      { id: '7', matkul: 'Statistika', sks: 3, grade: 'B+', score: 3.3, nilaiAngka: 76, nilaiHuruf: 'B+' },
-    ],
-  },
-  {
-    semester: '3', gpa: '3.80',
-    records: [
-      { id: '8', matkul: 'Struktur Data', sks: 4, grade: 'A', score: 4.0, nilaiAngka: 93, nilaiHuruf: 'A' },
-      { id: '9', matkul: 'Basis Data', sks: 3, grade: 'A-', score: 3.7, nilaiAngka: 84, nilaiHuruf: 'A-' },
-      { id: '10', matkul: 'Sistem Operasi', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 91, nilaiHuruf: 'A' },
+      { id: '1', matkul: 'Manajemen Pelayanan Farmasi', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 92, nilaiHuruf: 'A' },
+      { id: '2', matkul: 'Manajemen Promosi Kesehatan', sks: 2, grade: 'B+', score: 3.3, nilaiAngka: 85, nilaiHuruf: 'B+' },
+      { id: '3', matkul: 'Farmakologi Dasar', sks: 3, grade: 'A-', score: 3.7, nilaiAngka: 83, nilaiHuruf: 'A-' },
+      { id: '4', matkul: 'Biokimia', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
     ],
   },
 ];
@@ -56,15 +40,15 @@ function calcGpa(records: CourseGrade[]) {
 
 export default function Ujian() {
   const [semesters, setSemesters] = useState<Semester[]>(INITIAL_SEMESTERS);
-  const [openSemester, setOpenSemester] = useState<string | null>('1');
+  const [openSemester, setOpenSemester] = useState<string | null>('4');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newRecord, setNewRecord] = useState({ courseName: '', sks: 3, semester: 1, nilaiAngka: 85, grade: 'A', catatan: '' });
+  const [newRecord, setNewRecord] = useState({ courseName: '', sks: 3, semester: 4, nilaiAngka: 85, grade: 'A', catatan: '' });
   const [editRecord, setEditRecord] = useState<(CourseGrade & { semesterIdx: string }) | null>(null);
 
   const allRecords = semesters.flatMap(s => s.records);
   const totalCredits = allRecords.reduce((sum, r) => sum + r.sks, 0);
   const cumulativeGpa = calcGpa(allRecords);
-  const predikat = parseFloat(cumulativeGpa) >= 3.5 ? 'Cum Laude' : parseFloat(cumulativeGpa) >= 3.0 ? 'Sangat Memuaskan' : 'Memuaskan';
+  const predikat = parseFloat(cumulativeGpa) >= 3.5 ? 'Dengan Pujian (Cum Laude)' : parseFloat(cumulativeGpa) >= 3.0 ? 'Sangat Memuaskan' : 'Memuaskan';
   const maxGpa = 4.0;
 
   const handleAddRecord = (e: React.FormEvent) => {
@@ -85,7 +69,7 @@ export default function Ujian() {
       return [...prev, { semester: semKey, gpa: calcGpa([newCourse]), records: [newCourse] }].sort((a, b) => Number(a.semester) - Number(b.semester));
     });
     setShowAddModal(false);
-    setNewRecord({ courseName: '', sks: 3, semester: 1, nilaiAngka: 85, grade: 'A', catatan: '' });
+    setNewRecord({ courseName: '', sks: 3, semester: 4, nilaiAngka: 85, grade: 'A', catatan: '' });
     toast.success('Nilai berhasil ditambahkan!');
   };
 
@@ -112,7 +96,8 @@ export default function Ujian() {
         </div>
         <div className="flex items-center gap-2 w-full md:w-auto">
           <button onClick={() => setShowAddModal(true)} className="btn-accent flex-1 md:flex-none flex items-center justify-center gap-2"><Plus className="w-4 h-4" /> TAMBAH NILAI</button>
-          <button className="btn-secondary hidden md:flex items-center gap-2"><Download className="w-4 h-4" /> DOWNLOAD</button>
+          <button className="btn-secondary hidden md:flex items-center gap-2"><Download className="w-4 h-4" /> EXPORT NILAI</button>
+          <button className="btn-secondary hidden md:flex items-center gap-2"><Download className="w-4 h-4" /> TRANSKRIP PDF</button>
         </div>
       </div>
 
@@ -122,7 +107,7 @@ export default function Ujian() {
           { label: 'IPK', value: cumulativeGpa, color: 'bg-green-200/80', valueClass: 'text-blue-600' },
           { label: 'TOTAL SKS', value: totalCredits, color: 'bg-blue-200/80' },
           { label: 'SKS SISA', value: 144 - totalCredits, color: 'bg-accent/80' },
-          { label: 'PREDIKAT', value: predikat, color: 'bg-red-200/80', valueClass: 'text-orange-500 text-xl' },
+          { label: 'PREDIKAT', value: predikat, color: 'bg-red-200/80', valueClass: 'text-orange-500 text-base md:text-lg' },
         ].map((s, i) => (
           <div key={i} className="bg-card p-4 border-drawn shadow-sm text-center relative animate-fade-up" style={{ animationDelay: `${i * 80}ms` }}>
             <div className={`absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-3 ${s.color} transform ${i % 2 ? 'rotate-2' : '-rotate-2'}`} />
@@ -180,9 +165,8 @@ export default function Ujian() {
                       <tr className="bg-muted border-b-2 border-foreground">
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase">Mata Kuliah</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">SKS</th>
-                        <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Angka</th>
-                        <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Huruf</th>
-                        <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Bobot</th>
+                        <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Nilai Huruf</th>
+                        <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Nilai Angka</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Aksi</th>
                       </tr>
                     </thead>
@@ -191,9 +175,8 @@ export default function Ujian() {
                         <tr key={r.id} className={idx !== sem.records.length - 1 ? 'border-b border-muted' : ''}>
                           <td className="p-3 font-bold">{r.matkul}</td>
                           <td className="p-3 text-center font-medium">{r.sks}</td>
-                          <td className="p-3 text-center font-medium">{r.nilaiAngka}</td>
                           <td className="p-3 text-center font-black text-blue-600">{r.grade}</td>
-                          <td className="p-3 text-center font-medium">{r.score}</td>
+                          <td className="p-3 text-center font-medium">{r.nilaiAngka}</td>
                           <td className="p-3 text-center">
                             <button onClick={() => setEditRecord({ ...r, semesterIdx: sem.semester })} className="p-1.5 hover:bg-accent transition-colors border-drawn"><Edit2 className="w-4 h-4" /></button>
                           </td>
