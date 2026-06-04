@@ -43,9 +43,9 @@ function calcGpa(records: CourseGrade[]) {
 
 export default function Ujian() {
   const [semesters, setSemesters] = useState<Semester[]>(INITIAL_SEMESTERS);
-  const [openSemester, setOpenSemester] = useState<string | null>('4');
+  const [openSemester, setOpenSemester] = useState<string | null>('1');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newRecord, setNewRecord] = useState({ courseName: '', sks: 3, semester: 4, nilaiAngka: 85, grade: 'A', catatan: '' });
+  const [newRecord, setNewRecord] = useState({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 85, grade: 'A', catatan: '' });
   const [editRecord, setEditRecord] = useState<(CourseGrade & { semesterIdx: string }) | null>(null);
 
   const allRecords = semesters.flatMap(s => s.records);
