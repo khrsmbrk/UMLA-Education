@@ -4,13 +4,13 @@ import { toast } from 'sonner';
 import { CourseGrade, Semester } from '@/types/study';
 
 function gradeFromAngka(n: number): string {
-  if (n >= 85) return 'A';
-  if (n >= 80) return 'AB';
-  if (n >= 70) return 'B';
-  if (n >= 65) return 'BC';
-  if (n >= 60) return 'C';
-  if (n >= 55) return 'CD';
-  if (n >= 45) return 'D';
+  if (n >= 3.75) return 'A';
+  if (n >= 3.25) return 'AB';
+  if (n >= 2.75) return 'B';
+  if (n >= 2.25) return 'BC';
+  if (n >= 1.75) return 'C';
+  if (n >= 1.25) return 'CD';
+  if (n >= 0.75) return 'D';
   return 'E';
 }
 
@@ -19,18 +19,24 @@ function scoreFromGrade(g: string): number {
   return map[g] ?? 0;
 }
 
+function parseNilai(raw: string): number {
+  if (!raw) return 0;
+  const n = parseFloat(raw.replace(',', '.'));
+  return isNaN(n) ? 0 : Math.max(0, Math.min(4, n));
+}
+
 const INITIAL_SEMESTERS: Semester[] = [
   {
     semester: '1', gpa: '3.87',
     records: [
-      { id: 's1-1', matkul: 'KOMUNIKASI KESEHATAN', kode: '22WF0101', sks: 3, grade: 'AB', score: 3.5, nilaiAngka: 82, nilaiHuruf: 'AB' },
-      { id: 's1-2', matkul: 'AIK 1 : KEMANUSIAAN DAN KEIMANAN', kode: '22WI0001', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
-      { id: 's1-3', matkul: 'BAHASA INGGRIS', kode: '22WI0006', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
-      { id: 's1-4', matkul: 'BIOSCIENCE', kode: '22WP0301', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
-      { id: 's1-5', matkul: 'DASAR ADMINISTRASI DAN MANAJEMEN', kode: '22WP0302', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
-      { id: 's1-6', matkul: 'ANTROPOLOGI KESEHATAN', kode: '22WP0303', sks: 2, grade: 'AB', score: 3.5, nilaiAngka: 82, nilaiHuruf: 'AB' },
-      { id: 's1-7', matkul: 'PERATURAN DAN KEBIJAKAN KESEHATAN', kode: '22WP0304', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
-      { id: 's1-8', matkul: 'PANCASILA', kode: '22WU0002', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-1', matkul: 'KOMUNIKASI KESEHATAN', kode: '22WF0101', sks: 3, grade: 'AB', score: 3.5, nilaiAngka: 3.5, nilaiHuruf: 'AB' },
+      { id: 's1-2', matkul: 'AIK 1 : KEMANUSIAAN DAN KEIMANAN', kode: '22WI0001', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's1-3', matkul: 'BAHASA INGGRIS', kode: '22WI0006', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's1-4', matkul: 'BIOSCIENCE', kode: '22WP0301', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's1-5', matkul: 'DASAR ADMINISTRASI DAN MANAJEMEN', kode: '22WP0302', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's1-6', matkul: 'ANTROPOLOGI KESEHATAN', kode: '22WP0303', sks: 2, grade: 'AB', score: 3.5, nilaiAngka: 3.5, nilaiHuruf: 'AB' },
+      { id: 's1-7', matkul: 'PERATURAN DAN KEBIJAKAN KESEHATAN', kode: '22WP0304', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's1-8', matkul: 'PANCASILA', kode: '22WU0002', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
     ],
   },
 ];
@@ -57,7 +63,7 @@ export default function Ujian() {
   const handleAddRecord = (e: React.FormEvent) => {
     e.preventDefault();
     const grade = gradeFromAngka(newRecord.nilaiAngka);
-    const score = scoreFromGrade(grade);
+    const score = newRecord.nilaiAngka;
     const semKey = String(newRecord.semester);
     const newCourse: CourseGrade = { id: Date.now().toString(), matkul: newRecord.courseName, kode: newRecord.kode || undefined, sks: newRecord.sks, grade, score, nilaiAngka: newRecord.nilaiAngka, nilaiHuruf: grade, catatan: newRecord.catatan || undefined };
     setSemesters(prev => {
@@ -72,7 +78,7 @@ export default function Ujian() {
       return [...prev, { semester: semKey, gpa: calcGpa([newCourse]), records: [newCourse] }].sort((a, b) => Number(a.semester) - Number(b.semester));
     });
     setShowAddModal(false);
-    setNewRecord({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 85, grade: 'A', catatan: '' });
+    setNewRecord({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 4, grade: 'A', catatan: '' });
     toast.success('Nilai berhasil ditambahkan!');
   };
 
@@ -80,7 +86,7 @@ export default function Ujian() {
     e.preventDefault();
     if (!editRecord) return;
     const grade = gradeFromAngka(editRecord.nilaiAngka);
-    const score = scoreFromGrade(grade);
+    const score = editRecord.nilaiAngka;
     setSemesters(prev => prev.map(s => {
       if (s.semester !== editRecord.semesterIdx) return s;
       const recs = s.records.map(r => r.id === editRecord.id ? { ...editRecord, grade, score, nilaiHuruf: grade } : r);
@@ -182,7 +188,7 @@ export default function Ujian() {
                           <td className="p-3 font-bold">{r.matkul}</td>
                           <td className="p-3 text-center font-medium">{r.sks}</td>
                           <td className="p-3 text-center font-black text-blue-600">{r.grade}</td>
-                          <td className="p-3 text-center font-medium">{r.nilaiAngka}</td>
+                          <td className="p-3 text-center font-medium">{r.nilaiAngka.toFixed(2)}</td>
                           <td className="p-3 text-center font-medium">{(r.sks * r.score).toFixed(2)}</td>
                           <td className="p-3 text-center">
                             <button onClick={() => setEditRecord({ ...r, semesterIdx: sem.semester })} className="p-1.5 hover:bg-accent transition-colors border-drawn"><Edit2 className="w-4 h-4" /></button>
@@ -224,12 +230,12 @@ export default function Ujian() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-bold text-muted-foreground mb-1">Nilai Angka (0-100)</label>
-                <input type="number" min="0" max="100" required value={newRecord.nilaiAngka} onChange={e => {
-                  const v = parseInt(e.target.value) || 0;
+                <label className="block text-sm font-bold text-muted-foreground mb-1">Nilai (0,00 - 4,00)</label>
+                <input type="text" inputMode="decimal" required value={String(newRecord.nilaiAngka).replace('.', ',')} onChange={e => {
+                  const v = parseNilai(e.target.value);
                   setNewRecord({ ...newRecord, nilaiAngka: v, grade: gradeFromAngka(v) });
-                }} className="input-brutal" />
-                <p className="text-xs text-muted-foreground mt-1">Auto: {gradeFromAngka(newRecord.nilaiAngka)} ({scoreFromGrade(gradeFromAngka(newRecord.nilaiAngka))})</p>
+                }} className="input-brutal" placeholder="Contoh: 3,50" />
+                <p className="text-xs text-muted-foreground mt-1">Auto huruf: {gradeFromAngka(newRecord.nilaiAngka)}</p>
               </div>
               <div>
                 <label className="block text-sm font-bold text-muted-foreground mb-1">Catatan (Opsional)</label>
@@ -258,12 +264,12 @@ export default function Ujian() {
                   <input type="number" min="1" max="6" required value={editRecord.sks} onChange={e => setEditRecord({ ...editRecord, sks: parseInt(e.target.value) })} className="input-brutal" />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground mb-1">Nilai Angka (0-100)</label>
-                  <input type="number" min="0" max="100" required value={editRecord.nilaiAngka} onChange={e => {
-                    const v = parseInt(e.target.value) || 0;
+                  <label className="block text-sm font-bold text-muted-foreground mb-1">Nilai (0,00 - 4,00)</label>
+                  <input type="text" inputMode="decimal" required value={String(editRecord.nilaiAngka).replace('.', ',')} onChange={e => {
+                    const v = parseNilai(e.target.value);
                     setEditRecord({ ...editRecord, nilaiAngka: v });
-                  }} className="input-brutal" />
-                  <p className="text-xs text-muted-foreground mt-1">→ {gradeFromAngka(editRecord.nilaiAngka)} ({scoreFromGrade(gradeFromAngka(editRecord.nilaiAngka))})</p>
+                  }} className="input-brutal" placeholder="Contoh: 3,50" />
+                  <p className="text-xs text-muted-foreground mt-1">→ {gradeFromAngka(editRecord.nilaiAngka)}</p>
                 </div>
               </div>
               <div>
