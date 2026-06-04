@@ -5,29 +5,32 @@ import { CourseGrade, Semester } from '@/types/study';
 
 function gradeFromAngka(n: number): string {
   if (n >= 85) return 'A';
-  if (n >= 80) return 'A-';
-  if (n >= 75) return 'B+';
+  if (n >= 80) return 'AB';
   if (n >= 70) return 'B';
-  if (n >= 65) return 'B-';
-  if (n >= 60) return 'C+';
-  if (n >= 55) return 'C';
+  if (n >= 65) return 'BC';
+  if (n >= 60) return 'C';
+  if (n >= 55) return 'CD';
   if (n >= 45) return 'D';
   return 'E';
 }
 
 function scoreFromGrade(g: string): number {
-  const map: Record<string, number> = { A: 4.0, 'A-': 3.7, 'B+': 3.3, B: 3.0, 'B-': 2.7, 'C+': 2.3, C: 2.0, D: 1.0, E: 0 };
+  const map: Record<string, number> = { A: 4.0, AB: 3.5, B: 3.0, BC: 2.5, C: 2.0, CD: 1.5, D: 1.0, E: 0 };
   return map[g] ?? 0;
 }
 
 const INITIAL_SEMESTERS: Semester[] = [
   {
-    semester: '4', gpa: '3.80',
+    semester: '1', gpa: '3.87',
     records: [
-      { id: '1', matkul: 'Manajemen Pelayanan Farmasi', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 92, nilaiHuruf: 'A' },
-      { id: '2', matkul: 'Manajemen Promosi Kesehatan', sks: 2, grade: 'B+', score: 3.3, nilaiAngka: 85, nilaiHuruf: 'B+' },
-      { id: '3', matkul: 'Farmakologi Dasar', sks: 3, grade: 'A-', score: 3.7, nilaiAngka: 83, nilaiHuruf: 'A-' },
-      { id: '4', matkul: 'Biokimia', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-1', matkul: 'KOMUNIKASI KESEHATAN', kode: '22WF0101', sks: 3, grade: 'AB', score: 3.5, nilaiAngka: 82, nilaiHuruf: 'AB' },
+      { id: 's1-2', matkul: 'AIK 1 : KEMANUSIAAN DAN KEIMANAN', kode: '22WI0001', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-3', matkul: 'BAHASA INGGRIS', kode: '22WI0006', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-4', matkul: 'BIOSCIENCE', kode: '22WP0301', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-5', matkul: 'DASAR ADMINISTRASI DAN MANAJEMEN', kode: '22WP0302', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-6', matkul: 'ANTROPOLOGI KESEHATAN', kode: '22WP0303', sks: 2, grade: 'AB', score: 3.5, nilaiAngka: 82, nilaiHuruf: 'AB' },
+      { id: 's1-7', matkul: 'PERATURAN DAN KEBIJAKAN KESEHATAN', kode: '22WP0304', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-8', matkul: 'PANCASILA', kode: '22WU0002', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
     ],
   },
 ];
