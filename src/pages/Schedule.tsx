@@ -1,22 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar as CalendarIcon, Clock, MapPin, User, ChevronRight, Star, Plus, X } from 'lucide-react';
 
-const DAYS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+const DAYS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 const COLORS = ['bg-blue-100', 'bg-accent/50', 'bg-green-100', 'bg-purple-100', 'bg-orange-100'];
 
-const MOCK_SCHEDULE: any[] = [];
+const STORAGE_KEY = 'umla_schedule';
 
 export default function Schedule() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [schedule, setSchedule] = useState<any[]>(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
   const [newSlot, setNewSlot] = useState({ dayOfWeek: 'MONDAY', startTime: '', endTime: '', location: '', type: 'ON-SITE', courseName: '' });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
+  }, [schedule]);
 
   const groupedSchedule = DAYS.map(day => ({
     day,
-    classes: MOCK_SCHEDULE.filter((s: any) => s.dayOfWeek === day),
+    classes: schedule.filter((s: any) => s.dayOfWeek === day),
   })).filter(g => g.classes.length > 0);
 
   const handleCreateSlot = (e: React.FormEvent) => {
     e.preventDefault();
+    const item = {
+      id: `${Date.now()}`,
+      dayOfWeek: newSlot.dayOfWeek,
+      startTime: newSlot.startTime,
+      endTime: newSlot.endTime,
+      location: newSlot.location,
+      type: newSlot.type,
+      course: { name: newSlot.courseName, code: '-' },
+    };
+    setSchedule(prev => [...prev, item]);
     setIsModalOpen(false);
     setNewSlot({ dayOfWeek: 'MONDAY', startTime: '', endTime: '', location: '', type: 'ON-SITE', courseName: '' });
   };
@@ -31,7 +53,7 @@ export default function Schedule() {
         <div className="flex flex-col items-end gap-2">
           <div className="hidden md:block text-right">
             <p className="stat-label">CURRENT WEEK</p>
-            <p className="font-black text-2xl text-foreground">Week 7</p>
+            <p className="font-black text-2xl text-foreground">Week 11</p>
           </div>
           <button onClick={() => setIsModalOpen(true)} className="btn-primary flex items-center gap-2">
             <Plus className="w-5 h-5" /> NEW CLASS
