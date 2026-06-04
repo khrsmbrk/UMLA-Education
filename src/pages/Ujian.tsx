@@ -63,7 +63,7 @@ export default function Ujian() {
   const handleAddRecord = (e: React.FormEvent) => {
     e.preventDefault();
     const grade = gradeFromAngka(newRecord.nilaiAngka);
-    const score = scoreFromGrade(grade);
+    const score = newRecord.nilaiAngka;
     const semKey = String(newRecord.semester);
     const newCourse: CourseGrade = { id: Date.now().toString(), matkul: newRecord.courseName, kode: newRecord.kode || undefined, sks: newRecord.sks, grade, score, nilaiAngka: newRecord.nilaiAngka, nilaiHuruf: grade, catatan: newRecord.catatan || undefined };
     setSemesters(prev => {
