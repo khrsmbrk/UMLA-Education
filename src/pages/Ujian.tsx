@@ -166,20 +166,24 @@ export default function Ujian() {
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-muted border-b-2 border-foreground">
+                        <th className="p-3 text-xs font-bold text-muted-foreground uppercase">Kode MK</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase">Mata Kuliah</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">SKS</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Nilai Huruf</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Nilai Angka</th>
+                        <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Mutu</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
                       {sem.records.map((r, idx) => (
                         <tr key={r.id} className={idx !== sem.records.length - 1 ? 'border-b border-muted' : ''}>
+                          <td className="p-3 font-mono text-xs">{r.kode || '-'}</td>
                           <td className="p-3 font-bold">{r.matkul}</td>
                           <td className="p-3 text-center font-medium">{r.sks}</td>
                           <td className="p-3 text-center font-black text-blue-600">{r.grade}</td>
                           <td className="p-3 text-center font-medium">{r.nilaiAngka}</td>
+                          <td className="p-3 text-center font-medium">{(r.sks * r.score).toFixed(2)}</td>
                           <td className="p-3 text-center">
                             <button onClick={() => setEditRecord({ ...r, semesterIdx: sem.semester })} className="p-1.5 hover:bg-accent transition-colors border-drawn"><Edit2 className="w-4 h-4" /></button>
                           </td>
