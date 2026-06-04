@@ -230,12 +230,12 @@ export default function Ujian() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-bold text-muted-foreground mb-1">Nilai Angka (0-100)</label>
-                <input type="number" min="0" max="100" required value={newRecord.nilaiAngka} onChange={e => {
-                  const v = parseInt(e.target.value) || 0;
+                <label className="block text-sm font-bold text-muted-foreground mb-1">Nilai (0,00 - 4,00)</label>
+                <input type="text" inputMode="decimal" required value={String(newRecord.nilaiAngka).replace('.', ',')} onChange={e => {
+                  const v = parseNilai(e.target.value);
                   setNewRecord({ ...newRecord, nilaiAngka: v, grade: gradeFromAngka(v) });
-                }} className="input-brutal" />
-                <p className="text-xs text-muted-foreground mt-1">Auto: {gradeFromAngka(newRecord.nilaiAngka)} ({scoreFromGrade(gradeFromAngka(newRecord.nilaiAngka))})</p>
+                }} className="input-brutal" placeholder="Contoh: 3,50" />
+                <p className="text-xs text-muted-foreground mt-1">Auto huruf: {gradeFromAngka(newRecord.nilaiAngka)}</p>
               </div>
               <div>
                 <label className="block text-sm font-bold text-muted-foreground mb-1">Catatan (Opsional)</label>
