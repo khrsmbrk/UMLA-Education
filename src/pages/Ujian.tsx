@@ -59,7 +59,7 @@ export default function Ujian() {
     const grade = gradeFromAngka(newRecord.nilaiAngka);
     const score = scoreFromGrade(grade);
     const semKey = String(newRecord.semester);
-    const newCourse: CourseGrade = { id: Date.now().toString(), matkul: newRecord.courseName, sks: newRecord.sks, grade, score, nilaiAngka: newRecord.nilaiAngka, nilaiHuruf: grade, catatan: newRecord.catatan || undefined };
+    const newCourse: CourseGrade = { id: Date.now().toString(), matkul: newRecord.courseName, kode: newRecord.kode || undefined, sks: newRecord.sks, grade, score, nilaiAngka: newRecord.nilaiAngka, nilaiHuruf: grade, catatan: newRecord.catatan || undefined };
     setSemesters(prev => {
       const existing = prev.find(s => s.semester === semKey);
       if (existing) {
@@ -72,7 +72,7 @@ export default function Ujian() {
       return [...prev, { semester: semKey, gpa: calcGpa([newCourse]), records: [newCourse] }].sort((a, b) => Number(a.semester) - Number(b.semester));
     });
     setShowAddModal(false);
-    setNewRecord({ courseName: '', sks: 3, semester: 4, nilaiAngka: 85, grade: 'A', catatan: '' });
+    setNewRecord({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 85, grade: 'A', catatan: '' });
     toast.success('Nilai berhasil ditambahkan!');
   };
 
