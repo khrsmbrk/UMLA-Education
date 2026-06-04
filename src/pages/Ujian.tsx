@@ -188,7 +188,7 @@ export default function Ujian() {
                           <td className="p-3 font-bold">{r.matkul}</td>
                           <td className="p-3 text-center font-medium">{r.sks}</td>
                           <td className="p-3 text-center font-black text-blue-600">{r.grade}</td>
-                          <td className="p-3 text-center font-medium">{r.nilaiAngka}</td>
+                          <td className="p-3 text-center font-medium">{r.nilaiAngka.toFixed(2)}</td>
                           <td className="p-3 text-center font-medium">{(r.sks * r.score).toFixed(2)}</td>
                           <td className="p-3 text-center">
                             <button onClick={() => setEditRecord({ ...r, semesterIdx: sem.semester })} className="p-1.5 hover:bg-accent transition-colors border-drawn"><Edit2 className="w-4 h-4" /></button>
