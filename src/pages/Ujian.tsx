@@ -264,7 +264,7 @@ export default function Ujian() {
                   const g = e.target.value;
                   setEditRecord({ ...editRecord, nilaiHuruf: g, grade: g, score: scoreFromGrade(g) });
                 }} className="input-brutal">
-                  {['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D', 'E'].map(g => <option key={g} value={g}>{g}</option>)}
+                  {['A', 'AB', 'B', 'BC', 'C', 'CD', 'D', 'E'].map(g => <option key={g} value={g}>{g}</option>)}
                 </select>
               </div>
               <div>
