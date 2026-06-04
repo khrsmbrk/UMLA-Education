@@ -5,29 +5,32 @@ import { CourseGrade, Semester } from '@/types/study';
 
 function gradeFromAngka(n: number): string {
   if (n >= 85) return 'A';
-  if (n >= 80) return 'A-';
-  if (n >= 75) return 'B+';
+  if (n >= 80) return 'AB';
   if (n >= 70) return 'B';
-  if (n >= 65) return 'B-';
-  if (n >= 60) return 'C+';
-  if (n >= 55) return 'C';
+  if (n >= 65) return 'BC';
+  if (n >= 60) return 'C';
+  if (n >= 55) return 'CD';
   if (n >= 45) return 'D';
   return 'E';
 }
 
 function scoreFromGrade(g: string): number {
-  const map: Record<string, number> = { A: 4.0, 'A-': 3.7, 'B+': 3.3, B: 3.0, 'B-': 2.7, 'C+': 2.3, C: 2.0, D: 1.0, E: 0 };
+  const map: Record<string, number> = { A: 4.0, AB: 3.5, B: 3.0, BC: 2.5, C: 2.0, CD: 1.5, D: 1.0, E: 0 };
   return map[g] ?? 0;
 }
 
 const INITIAL_SEMESTERS: Semester[] = [
   {
-    semester: '4', gpa: '3.80',
+    semester: '1', gpa: '3.87',
     records: [
-      { id: '1', matkul: 'Manajemen Pelayanan Farmasi', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 92, nilaiHuruf: 'A' },
-      { id: '2', matkul: 'Manajemen Promosi Kesehatan', sks: 2, grade: 'B+', score: 3.3, nilaiAngka: 85, nilaiHuruf: 'B+' },
-      { id: '3', matkul: 'Farmakologi Dasar', sks: 3, grade: 'A-', score: 3.7, nilaiAngka: 83, nilaiHuruf: 'A-' },
-      { id: '4', matkul: 'Biokimia', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-1', matkul: 'KOMUNIKASI KESEHATAN', kode: '22WF0101', sks: 3, grade: 'AB', score: 3.5, nilaiAngka: 82, nilaiHuruf: 'AB' },
+      { id: 's1-2', matkul: 'AIK 1 : KEMANUSIAAN DAN KEIMANAN', kode: '22WI0001', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-3', matkul: 'BAHASA INGGRIS', kode: '22WI0006', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-4', matkul: 'BIOSCIENCE', kode: '22WP0301', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-5', matkul: 'DASAR ADMINISTRASI DAN MANAJEMEN', kode: '22WP0302', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-6', matkul: 'ANTROPOLOGI KESEHATAN', kode: '22WP0303', sks: 2, grade: 'AB', score: 3.5, nilaiAngka: 82, nilaiHuruf: 'AB' },
+      { id: 's1-7', matkul: 'PERATURAN DAN KEBIJAKAN KESEHATAN', kode: '22WP0304', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
+      { id: 's1-8', matkul: 'PANCASILA', kode: '22WU0002', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 90, nilaiHuruf: 'A' },
     ],
   },
 ];
@@ -40,9 +43,9 @@ function calcGpa(records: CourseGrade[]) {
 
 export default function Ujian() {
   const [semesters, setSemesters] = useState<Semester[]>(INITIAL_SEMESTERS);
-  const [openSemester, setOpenSemester] = useState<string | null>('4');
+  const [openSemester, setOpenSemester] = useState<string | null>('1');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newRecord, setNewRecord] = useState({ courseName: '', sks: 3, semester: 4, nilaiAngka: 85, grade: 'A', catatan: '' });
+  const [newRecord, setNewRecord] = useState({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 85, grade: 'A', catatan: '' });
   const [editRecord, setEditRecord] = useState<(CourseGrade & { semesterIdx: string }) | null>(null);
 
   const allRecords = semesters.flatMap(s => s.records);
@@ -56,7 +59,7 @@ export default function Ujian() {
     const grade = gradeFromAngka(newRecord.nilaiAngka);
     const score = scoreFromGrade(grade);
     const semKey = String(newRecord.semester);
-    const newCourse: CourseGrade = { id: Date.now().toString(), matkul: newRecord.courseName, sks: newRecord.sks, grade, score, nilaiAngka: newRecord.nilaiAngka, nilaiHuruf: grade, catatan: newRecord.catatan || undefined };
+    const newCourse: CourseGrade = { id: Date.now().toString(), matkul: newRecord.courseName, kode: newRecord.kode || undefined, sks: newRecord.sks, grade, score, nilaiAngka: newRecord.nilaiAngka, nilaiHuruf: grade, catatan: newRecord.catatan || undefined };
     setSemesters(prev => {
       const existing = prev.find(s => s.semester === semKey);
       if (existing) {
@@ -69,7 +72,7 @@ export default function Ujian() {
       return [...prev, { semester: semKey, gpa: calcGpa([newCourse]), records: [newCourse] }].sort((a, b) => Number(a.semester) - Number(b.semester));
     });
     setShowAddModal(false);
-    setNewRecord({ courseName: '', sks: 3, semester: 4, nilaiAngka: 85, grade: 'A', catatan: '' });
+    setNewRecord({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 85, grade: 'A', catatan: '' });
     toast.success('Nilai berhasil ditambahkan!');
   };
 
@@ -163,20 +166,24 @@ export default function Ujian() {
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-muted border-b-2 border-foreground">
+                        <th className="p-3 text-xs font-bold text-muted-foreground uppercase">Kode MK</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase">Mata Kuliah</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">SKS</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Nilai Huruf</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Nilai Angka</th>
+                        <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Mutu</th>
                         <th className="p-3 text-xs font-bold text-muted-foreground uppercase text-center">Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
                       {sem.records.map((r, idx) => (
                         <tr key={r.id} className={idx !== sem.records.length - 1 ? 'border-b border-muted' : ''}>
+                          <td className="p-3 font-mono text-xs">{r.kode || '-'}</td>
                           <td className="p-3 font-bold">{r.matkul}</td>
                           <td className="p-3 text-center font-medium">{r.sks}</td>
                           <td className="p-3 text-center font-black text-blue-600">{r.grade}</td>
                           <td className="p-3 text-center font-medium">{r.nilaiAngka}</td>
+                          <td className="p-3 text-center font-medium">{(r.sks * r.score).toFixed(2)}</td>
                           <td className="p-3 text-center">
                             <button onClick={() => setEditRecord({ ...r, semesterIdx: sem.semester })} className="p-1.5 hover:bg-accent transition-colors border-drawn"><Edit2 className="w-4 h-4" /></button>
                           </td>
@@ -199,8 +206,12 @@ export default function Ujian() {
             <h2 className="text-2xl font-black italic mb-6">TAMBAH NILAI</h2>
             <form onSubmit={handleAddRecord} className="space-y-4">
               <div>
+                <label className="block text-sm font-bold text-muted-foreground mb-1">Kode MK (Opsional)</label>
+                <input type="text" value={newRecord.kode} onChange={e => setNewRecord({ ...newRecord, kode: e.target.value })} className="input-brutal" placeholder="Contoh: 22WP0301" />
+              </div>
+              <div>
                 <label className="block text-sm font-bold text-muted-foreground mb-1">Mata Kuliah</label>
-                <input type="text" required value={newRecord.courseName} onChange={e => setNewRecord({ ...newRecord, courseName: e.target.value })} className="input-brutal" placeholder="Contoh: Algoritma" />
+                <input type="text" required value={newRecord.courseName} onChange={e => setNewRecord({ ...newRecord, courseName: e.target.value })} className="input-brutal" placeholder="Contoh: BIOSCIENCE" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -261,7 +272,7 @@ export default function Ujian() {
                   const g = e.target.value;
                   setEditRecord({ ...editRecord, nilaiHuruf: g, grade: g, score: scoreFromGrade(g) });
                 }} className="input-brutal">
-                  {['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D', 'E'].map(g => <option key={g} value={g}>{g}</option>)}
+                  {['A', 'AB', 'B', 'BC', 'C', 'CD', 'D', 'E'].map(g => <option key={g} value={g}>{g}</option>)}
                 </select>
               </div>
               <div>

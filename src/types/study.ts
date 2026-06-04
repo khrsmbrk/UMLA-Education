@@ -1,6 +1,7 @@
 export interface CourseGrade {
   id: string;
   matkul: string;
+  kode?: string;
   sks: number;
   grade: string;
   score: number;
