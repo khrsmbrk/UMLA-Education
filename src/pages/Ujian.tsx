@@ -86,7 +86,7 @@ export default function Ujian() {
     e.preventDefault();
     if (!editRecord) return;
     const grade = gradeFromAngka(editRecord.nilaiAngka);
-    const score = scoreFromGrade(grade);
+    const score = editRecord.nilaiAngka;
     setSemesters(prev => prev.map(s => {
       if (s.semester !== editRecord.semesterIdx) return s;
       const recs = s.records.map(r => r.id === editRecord.id ? { ...editRecord, grade, score, nilaiHuruf: grade } : r);
