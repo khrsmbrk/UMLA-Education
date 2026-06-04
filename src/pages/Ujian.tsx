@@ -78,7 +78,7 @@ export default function Ujian() {
       return [...prev, { semester: semKey, gpa: calcGpa([newCourse]), records: [newCourse] }].sort((a, b) => Number(a.semester) - Number(b.semester));
     });
     setShowAddModal(false);
-    setNewRecord({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 85, grade: 'A', catatan: '' });
+    setNewRecord({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 4, grade: 'A', catatan: '' });
     toast.success('Nilai berhasil ditambahkan!');
   };
 
