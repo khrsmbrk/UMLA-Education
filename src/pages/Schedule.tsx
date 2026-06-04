@@ -53,7 +53,7 @@ export default function Schedule() {
         <div className="flex flex-col items-end gap-2">
           <div className="hidden md:block text-right">
             <p className="stat-label">CURRENT WEEK</p>
-            <p className="font-black text-2xl text-foreground">Week 7</p>
+            <p className="font-black text-2xl text-foreground">Week 11</p>
           </div>
           <button onClick={() => setIsModalOpen(true)} className="btn-primary flex items-center gap-2">
             <Plus className="w-5 h-5" /> NEW CLASS
