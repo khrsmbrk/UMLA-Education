@@ -264,12 +264,12 @@ export default function Ujian() {
                   <input type="number" min="1" max="6" required value={editRecord.sks} onChange={e => setEditRecord({ ...editRecord, sks: parseInt(e.target.value) })} className="input-brutal" />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground mb-1">Nilai Angka (0-100)</label>
-                  <input type="number" min="0" max="100" required value={editRecord.nilaiAngka} onChange={e => {
-                    const v = parseInt(e.target.value) || 0;
+                  <label className="block text-sm font-bold text-muted-foreground mb-1">Nilai (0,00 - 4,00)</label>
+                  <input type="text" inputMode="decimal" required value={String(editRecord.nilaiAngka).replace('.', ',')} onChange={e => {
+                    const v = parseNilai(e.target.value);
                     setEditRecord({ ...editRecord, nilaiAngka: v });
-                  }} className="input-brutal" />
-                  <p className="text-xs text-muted-foreground mt-1">→ {gradeFromAngka(editRecord.nilaiAngka)} ({scoreFromGrade(gradeFromAngka(editRecord.nilaiAngka))})</p>
+                  }} className="input-brutal" placeholder="Contoh: 3,50" />
+                  <p className="text-xs text-muted-foreground mt-1">→ {gradeFromAngka(editRecord.nilaiAngka)}</p>
                 </div>
               </div>
               <div>
