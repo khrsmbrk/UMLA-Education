@@ -243,10 +243,6 @@ export default function Ujian() {
             <h2 className="text-2xl font-black italic mb-6">TAMBAH NILAI</h2>
             <form onSubmit={handleAddRecord} className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-muted-foreground mb-1">Kode MK (Opsional)</label>
-                <input type="text" value={newRecord.kode} onChange={e => setNewRecord({ ...newRecord, kode: e.target.value })} className="input-brutal" placeholder="Contoh: 22WP0301" />
-              </div>
-              <div>
                 <label className="block text-sm font-bold text-muted-foreground mb-1">Mata Kuliah</label>
                 <input type="text" required value={newRecord.courseName} onChange={e => setNewRecord({ ...newRecord, courseName: e.target.value })} className="input-brutal" placeholder="Contoh: BIOSCIENCE" />
               </div>
