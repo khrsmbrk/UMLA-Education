@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Book, Plus, FileText, Calendar, X } from 'lucide-react';
+import { getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORAGE_KEY_NOTES = 'umla_notes';
 
 const MOCK_NOTES = [
   { id: '1', title: 'Chapter 1 - Intro to Algorithms', content: 'An algorithm is a step-by-step procedure for solving a problem. Key concepts: time complexity, space complexity, Big O notation...', updatedAt: '2026-03-20', course: { code: 'IF301' } },
@@ -9,11 +12,15 @@ const MOCK_NOTES = [
 ];
 
 export default function Notes() {
+  const [notes, setNotes] = useState(() => getStoredData(STORAGE_KEY_NOTES, MOCK_NOTES));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newNote, setNewNote] = useState({ title: '', content: '' });
 
+  useEffect(() => { saveStoredData(STORAGE_KEY_NOTES, notes); }, [notes]);
+
   const handleCreateNote = (e: React.FormEvent) => {
     e.preventDefault();
+    setNotes([{ id: Date.now().toString(), ...newNote, updatedAt: new Date().toISOString().split('T')[0], course: null }, ...notes]);
     setIsModalOpen(false);
     setNewNote({ title: '', content: '' });
   };
@@ -31,7 +38,7 @@ export default function Notes() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {MOCK_NOTES.map((note, i) => (
+        {notes.map((note, i) => (
           <div key={note.id} className="bg-card p-6 border-drawn shadow-brutal-sm flex flex-col h-full hover:-translate-y-1 hover:shadow-brutal transition-all animate-fade-up" style={{ animationDelay: `${i * 80}ms` }}>
             <div className="flex items-start justify-between mb-4">
               <h3 className="font-bold text-xl text-foreground line-clamp-2">{note.title}</h3>

@@ -3,7 +3,10 @@ import {
   LayoutDashboard, Clock, Play, Pause, RotateCcw, FileEdit, Monitor, Database, Mail,
   Link as LinkIcon, Plus, X, AlertTriangle, CheckCircle, Calendar as CalendarIcon, FileText
 } from 'lucide-react';
-import { getAnnouncements, getProfile } from '@/lib/mockStore';
+import { getAnnouncements, getProfile, getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORAGE_KEY_LINKS = 'umla_dashboard_links';
+const STORAGE_KEY_DEFAULT_LOGIN = 'umla_default_login';
 
 export default function Dashboard() {
   const profile = getProfile();
@@ -13,12 +16,15 @@ export default function Dashboard() {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [timerMode, setTimerMode] = useState('Focus');
-  const [defaultLogin, setDefaultLogin] = useState(true);
+  const [defaultLogin, setDefaultLogin] = useState(() => getStoredData(STORAGE_KEY_DEFAULT_LOGIN, true));
 
   // My Links
-  const [links, setLinks] = useState<{ id: string; title: string; url: string }[]>([]);
+  const [links, setLinks] = useState<{ id: string; title: string; url: string }[]>(() => getStoredData(STORAGE_KEY_LINKS, []));
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [newLink, setNewLink] = useState({ title: '', url: '' });
+
+  useEffect(() => { saveStoredData(STORAGE_KEY_LINKS, links); }, [links]);
+  useEffect(() => { saveStoredData(STORAGE_KEY_DEFAULT_LOGIN, defaultLogin); }, [defaultLogin]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;

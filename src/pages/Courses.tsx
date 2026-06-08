@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BookOpen, Plus, X, GraduationCap, Hash } from 'lucide-react';
+import { getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORAGE_KEY_COURSES = 'umla_courses';
 
 const MOCK_COURSES = [
   { id: '1', name: 'Struktur Data', sks: 4, semester: 3, code: 'IF301' },
@@ -11,11 +14,15 @@ const MOCK_COURSES = [
 ];
 
 export default function Courses() {
+  const [courses, setCourses] = useState(() => getStoredData(STORAGE_KEY_COURSES, MOCK_COURSES));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCourse, setNewCourse] = useState({ name: '', sks: '', semester: '' });
 
+  useEffect(() => { saveStoredData(STORAGE_KEY_COURSES, courses); }, [courses]);
+
   const handleCreateCourse = (e: React.FormEvent) => {
     e.preventDefault();
+    setCourses([...courses, { id: Date.now().toString(), name: newCourse.name, sks: Number(newCourse.sks), semester: Number(newCourse.semester), code: '-' }]);
     setIsModalOpen(false);
     setNewCourse({ name: '', sks: '', semester: '' });
   };
@@ -33,7 +40,7 @@ export default function Courses() {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {MOCK_COURSES.map((course, i) => (
+        {courses.map((course, i) => (
           <div key={course.id} className="p-6 border-drawn shadow-brutal-sm hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_hsl(var(--navy))] transition-all bg-green-50/50 group cursor-pointer animate-fade-up" style={{ animationDelay: `${i * 80}ms` }}>
             <div className="flex justify-between items-start mb-4">
               <div className="w-10 h-10 bg-green-200 border-drawn rounded-full flex items-center justify-center transform -rotate-6 group-hover:rotate-0 transition-transform">

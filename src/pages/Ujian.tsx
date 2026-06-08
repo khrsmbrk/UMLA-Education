@@ -76,8 +76,18 @@ function calcGpa(records: CourseGrade[]) {
   return totalSks > 0 ? (totalWeight / totalSks).toFixed(2) : '0.00';
 }
 
+function getInitialSemesters() {
+  const stored = getStoredData<Semester[] | null>(STORAGE_KEY_GRADES, null);
+  if (!stored) return INITIAL_SEMESTERS;
+  const merged = [...stored];
+  INITIAL_SEMESTERS.forEach(seed => {
+    if (!merged.some(sem => sem.semester === seed.semester)) merged.push(seed);
+  });
+  return merged.sort((a, b) => Number(a.semester) - Number(b.semester));
+}
+
 export default function Ujian() {
-  const [semesters, setSemesters] = useState<Semester[]>(() => getStoredData(STORAGE_KEY_GRADES, INITIAL_SEMESTERS));
+  const [semesters, setSemesters] = useState<Semester[]>(getInitialSemesters);
   const [openSemester, setOpenSemester] = useState<string | null>('1');
   const [showAddModal, setShowAddModal] = useState(false);
   const [newRecord, setNewRecord] = useState({ courseName: '', sks: 3, semester: 1, nilaiAngka: 4, grade: 'A', catatan: '' });
