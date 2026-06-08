@@ -14,8 +14,8 @@ export default function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [showBell, setShowBell] = useState(false);
+  const [profile, setProfile] = useState(getProfile());
   const bellRef = useRef<HTMLDivElement>(null);
-  const profile = getProfile();
 
   const navigation = [
     { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard },
@@ -38,6 +38,16 @@ export default function Layout() {
   }, []);
 
   useEffect(() => {
+    const loadProfile = () => setProfile(getProfile());
+    window.addEventListener('storage', loadProfile);
+    window.addEventListener('umla-profile-updated', loadProfile);
+    return () => {
+      window.removeEventListener('storage', loadProfile);
+      window.removeEventListener('umla-profile-updated', loadProfile);
+    };
+  }, []);
+
+  useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (bellRef.current && !bellRef.current.contains(e.target as Node)) setShowBell(false);
     };
@@ -50,7 +60,6 @@ export default function Layout() {
   }, [location.pathname]);
 
   const handleLogout = () => {
-    localStorage.clear();
     navigate('/login');
   };
 

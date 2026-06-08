@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GraduationCap, Plus, Calendar, Clock, CheckCircle2, Circle, X } from 'lucide-react';
+import { getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORAGE_KEY_EXAMS = 'umla_exams';
 
 const MOCK_EXAMS = [
   { id: '1', title: 'UTS Struktur Data', type: 'MIDTERM', date: '2026-04-05', status: 'UPCOMING', course: { code: 'IF301' } },
@@ -9,9 +12,11 @@ const MOCK_EXAMS = [
 ];
 
 export default function Exams() {
-  const [exams, setExams] = useState(MOCK_EXAMS);
+  const [exams, setExams] = useState(() => getStoredData(STORAGE_KEY_EXAMS, MOCK_EXAMS));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newExam, setNewExam] = useState({ title: '', type: 'MIDTERM', date: '' });
+
+  useEffect(() => { saveStoredData(STORAGE_KEY_EXAMS, exams); }, [exams]);
 
   const toggleExamStatus = (id: string) => {
     setExams(exams.map(e => e.id === id ? { ...e, status: e.status === 'FINISHED' ? 'UPCOMING' : 'FINISHED' } : e));

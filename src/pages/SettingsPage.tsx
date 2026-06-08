@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { Settings as SettingsIcon, Users, CheckCircle, X, Plus, Trash2, Edit2, Bell, User, Lock, LogOut, Camera } from 'lucide-react';
 import { toast } from 'sonner';
 import { Announcement } from '@/types/study';
-import { getAnnouncements, saveAnnouncements, getProfile, saveProfile } from '@/lib/mockStore';
+import { getAnnouncements, saveAnnouncements, getProfile, saveProfile, getStoredData, saveStoredData } from '@/lib/mockStore';
 
 const KATEGORI_OPTIONS: Announcement['kategori'][] = ['Akademik', 'Umum', 'Keuangan', 'Sistem'];
+const STORE_KEY_PENDING_USERS = 'umla_pending_users';
+const STORE_KEY_ACTIVE_USERS = 'umla_active_users';
 
 function getToday() {
   return new Date().toISOString().split('T')[0];
@@ -12,10 +14,10 @@ function getToday() {
 
 export default function SettingsPage() {
   // === User Approval ===
-  const [pendingUsers, setPendingUsers] = useState<any[]>([]);
-  const [activeUsers] = useState([
+  const [pendingUsers, setPendingUsers] = useState<any[]>(() => getStoredData(STORE_KEY_PENDING_USERS, []));
+  const [activeUsers, setActiveUsers] = useState<any[]>(() => getStoredData(STORE_KEY_ACTIVE_USERS, [
     { id: '1', name: 'Ahmad Fauzi', nim: 'ahmadfauzi', email: 'demo@example.com', joinedAt: '30 Maret 2026' },
-  ]);
+  ]));
 
   // === Account Settings ===
   const [profile, setProfile] = useState(getProfile());
@@ -32,8 +34,12 @@ export default function SettingsPage() {
   const [announcementForm, setAnnouncementForm] = useState({ judul: '', isi: '', kategori: 'Akademik' as Announcement['kategori'], tanggal: getToday(), aktif: true });
 
   useEffect(() => { saveAnnouncements(announcements); }, [announcements]);
+  useEffect(() => { saveStoredData(STORE_KEY_PENDING_USERS, pendingUsers); }, [pendingUsers]);
+  useEffect(() => { saveStoredData(STORE_KEY_ACTIVE_USERS, activeUsers); }, [activeUsers]);
 
   const handleApproveUser = (id: string) => {
+    const approved = pendingUsers.find(u => u.id === id);
+    if (approved) setActiveUsers(prev => [{ ...approved, joinedAt: approved.joinedAt || new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }, ...prev]);
     setPendingUsers(pendingUsers.filter(u => u.id !== id));
     toast.success('Pengguna disetujui!');
   };
@@ -66,7 +72,6 @@ export default function SettingsPage() {
   };
 
   const handleLogoutAll = () => {
-    localStorage.clear();
     toast.success('Logout dari semua sesi...');
     setTimeout(() => { window.location.href = '/login'; }, 1000);
   };
@@ -170,8 +175,8 @@ export default function SettingsPage() {
               </tr>
             </thead>
             <tbody>
-              {activeUsers.map((user, i) => (
-                <tr key={user.id} className={`hover:bg-muted transition-colors ${i < activeUsers.length - 1 ? 'border-b border-muted' : ''}`}>
+              {[{ id: 'current', ...profile, joinedAt: new Date(profile.joinedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }, ...activeUsers.filter(u => u.id !== 'current')].map((user, i, list) => (
+                <tr key={user.id} className={`hover:bg-muted transition-colors ${i < list.length - 1 ? 'border-b border-muted' : ''}`}>
                   <td className="p-4 font-bold text-foreground">{user.name}</td>
                   <td className="p-4 font-mono text-sm text-muted-foreground hidden sm:table-cell">{user.nim}</td>
                   <td className="p-4 font-mono text-sm text-muted-foreground hidden md:table-cell">{user.email}</td>

@@ -1,7 +1,10 @@
 import { LineChart, Download, ChevronDown, ChevronUp, Plus, X, Edit2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { CourseGrade, Semester } from '@/types/study';
+import { getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORAGE_KEY_GRADES = 'umla_grades';
 
 function gradeFromAngka(n: number): string {
   if (n >= 3.75) return 'A';
@@ -39,6 +42,32 @@ const INITIAL_SEMESTERS: Semester[] = [
       { id: 's1-8', matkul: 'PANCASILA', kode: '22WU0002', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
     ],
   },
+  {
+    semester: '2', gpa: '3.66',
+    records: [
+      { id: 's2-1', matkul: 'AIK 2 : IBADAH, AKHLAK DAN MUAMALAH', kode: '22WI0002', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's2-2', matkul: 'PERILAKU ORGANISASI', kode: '22WP0305', sks: 2, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
+      { id: 's2-3', matkul: 'ADMINISTRASI RS', kode: '22WP0306', sks: 3, grade: 'AB', score: 3.5, nilaiAngka: 3.5, nilaiHuruf: 'AB' },
+      { id: 's2-4', matkul: 'ETIKA PROFESI ARS DAN HUKUM KESEHATAN', kode: '22WP0307', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's2-5', matkul: 'MANAJEMEN SIM RS', kode: '22WP0308', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's2-6', matkul: 'ILMU KESEHATAN MASYARAKAT', kode: '22WP0309', sks: 2, grade: 'AB', score: 3.5, nilaiAngka: 3.5, nilaiHuruf: 'AB' },
+      { id: 's2-7', matkul: 'EPIDEMIOLOGI', kode: '22WP0310', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's2-8', matkul: 'SISTEM ASURANSI KESEHATAN', kode: '22WP0311', sks: 2, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
+    ],
+  },
+  {
+    semester: '3', gpa: '3.59',
+    records: [
+      { id: 's3-1', matkul: 'AIK 3 : KEMUHAMMADIYAHAN', kode: '22WI0003', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's3-2', matkul: 'MANAJEMEN REKAM MEDIS', kode: '22WP0312', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's3-3', matkul: 'SISTEM PERENCANAAN RS', kode: '22WP0313', sks: 3, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
+      { id: 's3-4', matkul: 'MANAJEMEN BISNIS RS', kode: '22WP0314', sks: 3, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
+      { id: 's3-5', matkul: 'ANGGARAN DAN INDIKATOR KINERJA RS', kode: '22WP0315', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's3-6', matkul: 'MANAJEMEN K3 RS', kode: '22WP0316', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's3-7', matkul: 'MANAJEMEN KESLING DAN LIMBAH RS', kode: '22WP0317', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
+      { id: 's3-8', matkul: 'MANAJEMEN KOMPLAIN DAN CS', kode: '22WP0318', sks: 3, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
+    ],
+  },
 ];
 
 function calcGpa(records: CourseGrade[]) {
@@ -47,12 +76,24 @@ function calcGpa(records: CourseGrade[]) {
   return totalSks > 0 ? (totalWeight / totalSks).toFixed(2) : '0.00';
 }
 
+function getInitialSemesters() {
+  const stored = getStoredData<Semester[] | null>(STORAGE_KEY_GRADES, null);
+  if (!stored) return INITIAL_SEMESTERS;
+  const merged = [...stored];
+  INITIAL_SEMESTERS.forEach(seed => {
+    if (!merged.some(sem => sem.semester === seed.semester)) merged.push(seed);
+  });
+  return merged.sort((a, b) => Number(a.semester) - Number(b.semester));
+}
+
 export default function Ujian() {
-  const [semesters, setSemesters] = useState<Semester[]>(INITIAL_SEMESTERS);
+  const [semesters, setSemesters] = useState<Semester[]>(getInitialSemesters);
   const [openSemester, setOpenSemester] = useState<string | null>('1');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newRecord, setNewRecord] = useState({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 85, grade: 'A', catatan: '' });
+  const [newRecord, setNewRecord] = useState({ courseName: '', sks: 3, semester: 1, nilaiAngka: 4, grade: 'A', catatan: '' });
   const [editRecord, setEditRecord] = useState<(CourseGrade & { semesterIdx: string }) | null>(null);
+
+  useEffect(() => { saveStoredData(STORAGE_KEY_GRADES, semesters); }, [semesters]);
 
   const allRecords = semesters.flatMap(s => s.records);
   const totalCredits = allRecords.reduce((sum, r) => sum + r.sks, 0);
@@ -65,7 +106,7 @@ export default function Ujian() {
     const grade = gradeFromAngka(newRecord.nilaiAngka);
     const score = newRecord.nilaiAngka;
     const semKey = String(newRecord.semester);
-    const newCourse: CourseGrade = { id: Date.now().toString(), matkul: newRecord.courseName, kode: newRecord.kode || undefined, sks: newRecord.sks, grade, score, nilaiAngka: newRecord.nilaiAngka, nilaiHuruf: grade, catatan: newRecord.catatan || undefined };
+    const newCourse: CourseGrade = { id: Date.now().toString(), matkul: newRecord.courseName, sks: newRecord.sks, grade, score, nilaiAngka: newRecord.nilaiAngka, nilaiHuruf: grade, catatan: newRecord.catatan || undefined };
     setSemesters(prev => {
       const existing = prev.find(s => s.semester === semKey);
       if (existing) {
@@ -78,7 +119,7 @@ export default function Ujian() {
       return [...prev, { semester: semKey, gpa: calcGpa([newCourse]), records: [newCourse] }].sort((a, b) => Number(a.semester) - Number(b.semester));
     });
     setShowAddModal(false);
-    setNewRecord({ courseName: '', kode: '', sks: 3, semester: 1, nilaiAngka: 4, grade: 'A', catatan: '' });
+    setNewRecord({ courseName: '', sks: 3, semester: 1, nilaiAngka: 4, grade: 'A', catatan: '' });
     toast.success('Nilai berhasil ditambahkan!');
   };
 
@@ -211,10 +252,6 @@ export default function Ujian() {
             <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"><X className="w-6 h-6" /></button>
             <h2 className="text-2xl font-black italic mb-6">TAMBAH NILAI</h2>
             <form onSubmit={handleAddRecord} className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-muted-foreground mb-1">Kode MK (Opsional)</label>
-                <input type="text" value={newRecord.kode} onChange={e => setNewRecord({ ...newRecord, kode: e.target.value })} className="input-brutal" placeholder="Contoh: 22WP0301" />
-              </div>
               <div>
                 <label className="block text-sm font-bold text-muted-foreground mb-1">Mata Kuliah</label>
                 <input type="text" required value={newRecord.courseName} onChange={e => setNewRecord({ ...newRecord, courseName: e.target.value })} className="input-brutal" placeholder="Contoh: BIOSCIENCE" />
