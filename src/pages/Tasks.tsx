@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CheckCircle, Plus, Calendar as CalendarIcon, X } from 'lucide-react';
+import { getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORAGE_KEY_TASKS = 'umla_tasks';
 
 const MOCK_TASKS = [
   { id: '1', title: 'Get Practical Review From Teacher', course: { name: 'Manajemen Pelayanan Farmasi' }, priority: 'HIGH', status: 'NOT_STARTED', dueDate: '2026-04-01' },
@@ -8,9 +11,11 @@ const MOCK_TASKS = [
 ];
 
 export default function Tasks() {
-  const [tasks, setTasks] = useState(MOCK_TASKS);
+  const [tasks, setTasks] = useState(() => getStoredData(STORAGE_KEY_TASKS, MOCK_TASKS));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({ title: '', priority: 'MEDIUM', dueDate: '' });
+
+  useEffect(() => { saveStoredData(STORAGE_KEY_TASKS, tasks); }, [tasks]);
 
   const toggleTaskStatus = (taskId: string) => {
     setTasks(tasks.map(task =>

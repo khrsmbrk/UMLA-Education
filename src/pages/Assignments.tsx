@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FileText, Plus, CheckCircle, Calendar as CalendarIcon, X, BookOpen } from 'lucide-react';
+import { getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORAGE_KEY_ASSIGNMENTS = 'umla_assignments';
 
 const MOCK_ASSIGNMENTS = [
   { id: '1', title: 'Essay Struktur Data - Linked List', description: 'Tulis essay tentang implementasi linked list', status: 'NOT_STARTED', dueDate: '2026-03-30', course: { name: 'Struktur Data' } },
@@ -9,9 +12,11 @@ const MOCK_ASSIGNMENTS = [
 ];
 
 export default function Assignments() {
-  const [assignments, setAssignments] = useState(MOCK_ASSIGNMENTS);
+  const [assignments, setAssignments] = useState(() => getStoredData(STORAGE_KEY_ASSIGNMENTS, MOCK_ASSIGNMENTS));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAssignment, setNewAssignment] = useState({ title: '', description: '', dueDate: '' });
+
+  useEffect(() => { saveStoredData(STORAGE_KEY_ASSIGNMENTS, assignments); }, [assignments]);
 
   const toggleStatus = (id: string) => {
     setAssignments(assignments.map(a => a.id === id ? { ...a, status: a.status === 'COMPLETED' ? 'NOT_STARTED' : 'COMPLETED' } : a));

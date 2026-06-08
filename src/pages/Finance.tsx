@@ -1,7 +1,10 @@
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { DollarSign, FileText, Download, CheckCircle, AlertCircle, CreditCard, Plus, X, Paperclip } from 'lucide-react';
 import { toast } from 'sonner';
 import { Transaction } from '@/types/study';
+import { getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORAGE_KEY_FINANCE = 'umla_finance_transactions';
 
 const MOCK_TRANSACTIONS: Transaction[] = [
   { id: '1', title: 'Pembayaran UKT Semester 3', amount: 4500000, status: 'PAID', category: 'UKT', invoiceNumber: 'INV-2026-001', createdAt: '2026-01-15' },
@@ -13,7 +16,7 @@ const formatCurrency = (amount: number) => new Intl.NumberFormat('id-ID', { styl
 const formatDate = (d: string) => d ? new Date(d).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
 
 export default function Finance() {
-  const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
+  const [transactions, setTransactions] = useState<Transaction[]>(() => getStoredData(STORAGE_KEY_FINANCE, MOCK_TRANSACTIONS));
   const [showAddModal, setShowAddModal] = useState(false);
   const [newTx, setNewTx] = useState({ title: '', amount: '', status: 'PAID', category: 'UKT', date: '' });
   const [buktiFile, setBuktiFile] = useState<string | undefined>();
@@ -23,6 +26,8 @@ export default function Finance() {
 
   const totalPaid = transactions.filter(t => t.status === 'PAID').reduce((s, t) => s + t.amount, 0);
   const outstanding = transactions.filter(t => t.status === 'UNPAID').reduce((s, t) => s + t.amount, 0);
+
+  useEffect(() => { saveStoredData(STORAGE_KEY_FINANCE, transactions); }, [transactions]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
