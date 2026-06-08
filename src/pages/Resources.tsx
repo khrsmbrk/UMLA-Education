@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Monitor, Plus, Link as LinkIcon, File, Video, BookOpen, ExternalLink, X } from 'lucide-react';
+import { getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORAGE_KEY_RESOURCES = 'umla_resources';
 
 const MOCK_RESOURCES = [
   { id: '1', title: 'React Documentation', type: 'LINK', url: 'https://react.dev', course: { code: 'IF301' } },
@@ -19,11 +22,15 @@ const getResourceIcon = (type: string) => {
 };
 
 export default function Resources() {
+  const [resources, setResources] = useState(() => getStoredData(STORAGE_KEY_RESOURCES, MOCK_RESOURCES));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newResource, setNewResource] = useState({ title: '', type: 'LINK', url: '' });
 
+  useEffect(() => { saveStoredData(STORAGE_KEY_RESOURCES, resources); }, [resources]);
+
   const handleCreateResource = (e: React.FormEvent) => {
     e.preventDefault();
+    setResources([{ id: Date.now().toString(), ...newResource, course: null }, ...resources]);
     setIsModalOpen(false);
     setNewResource({ title: '', type: 'LINK', url: '' });
   };
@@ -41,7 +48,7 @@ export default function Resources() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {MOCK_RESOURCES.map((resource, i) => (
+        {resources.map((resource, i) => (
           <a
             key={resource.id}
             href={resource.url}
