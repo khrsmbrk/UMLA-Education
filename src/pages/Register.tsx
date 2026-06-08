@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, Globe, FileEdit, Monitor, Database, UserPlus } from 'lucide-react';
+import { getStoredData, saveStoredData } from '@/lib/mockStore';
+
+const STORE_KEY_PENDING_USERS = 'umla_pending_users';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -12,6 +15,11 @@ export default function Register() {
     e.preventDefault();
     setIsLoading(true);
     setTimeout(() => {
+      const pendingUsers = getStoredData<any[]>(STORE_KEY_PENDING_USERS, []);
+      saveStoredData(STORE_KEY_PENDING_USERS, [
+        ...pendingUsers,
+        { id: Date.now().toString(), name: form.name, nim: form.nim, email: form.email, joinedAt: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) },
+      ]);
       setIsLoading(false);
       setSuccessMsg('Registrasi berhasil! Silakan login setelah disetujui Admin.');
       setTimeout(() => navigate('/login'), 2000);
