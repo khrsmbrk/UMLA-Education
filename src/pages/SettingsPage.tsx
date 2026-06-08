@@ -66,7 +66,6 @@ export default function SettingsPage() {
   };
 
   const handleLogoutAll = () => {
-    localStorage.clear();
     toast.success('Logout dari semua sesi...');
     setTimeout(() => { window.location.href = '/login'; }, 1000);
   };
@@ -170,7 +169,7 @@ export default function SettingsPage() {
               </tr>
             </thead>
             <tbody>
-              {activeUsers.map((user, i) => (
+              {[{ id: 'current', ...profile, joinedAt: new Date(profile.joinedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }, ...activeUsers].map((user, i) => (
                 <tr key={user.id} className={`hover:bg-muted transition-colors ${i < activeUsers.length - 1 ? 'border-b border-muted' : ''}`}>
                   <td className="p-4 font-bold text-foreground">{user.name}</td>
                   <td className="p-4 font-mono text-sm text-muted-foreground hidden sm:table-cell">{user.nim}</td>
