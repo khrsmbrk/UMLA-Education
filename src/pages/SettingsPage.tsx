@@ -59,10 +59,6 @@ export default function SettingsPage() {
 
   const handleSaveProfile = () => {
     saveProfile(profile);
-    setActiveUsers(prev => {
-      const current = { id: 'current', name: profile.name, nim: profile.nim, email: profile.email, joinedAt: new Date(profile.joinedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) };
-      return prev.some(u => u.id === 'current') ? prev.map(u => u.id === 'current' ? current : u) : [current, ...prev];
-    });
     toast.success('Profil berhasil disimpan!');
   };
 
@@ -179,8 +175,8 @@ export default function SettingsPage() {
               </tr>
             </thead>
             <tbody>
-              {[{ id: 'current', ...profile, joinedAt: new Date(profile.joinedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }, ...activeUsers].map((user, i) => (
-                <tr key={user.id} className={`hover:bg-muted transition-colors ${i < activeUsers.length - 1 ? 'border-b border-muted' : ''}`}>
+              {[{ id: 'current', ...profile, joinedAt: new Date(profile.joinedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }, ...activeUsers.filter(u => u.id !== 'current')].map((user, i, list) => (
+                <tr key={user.id} className={`hover:bg-muted transition-colors ${i < list.length - 1 ? 'border-b border-muted' : ''}`}>
                   <td className="p-4 font-bold text-foreground">{user.name}</td>
                   <td className="p-4 font-mono text-sm text-muted-foreground hidden sm:table-cell">{user.nim}</td>
                   <td className="p-4 font-mono text-sm text-muted-foreground hidden md:table-cell">{user.email}</td>
