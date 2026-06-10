@@ -116,24 +116,9 @@ export default function Dashboard() {
           <div className="bg-card p-6 border-drawn shadow-sm relative animate-fade-up" style={{ animationDelay: '100ms' }}>
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-4 bg-green-100/80 transform rotate-1" />
             <h2 className="text-2xl font-black italic mb-6">TODAY OVERVIEW</h2>
-            <div className="space-y-4">
-              {[
-                { icon: CalendarIcon, title: 'Kuliah Pemrograman Web', desc: '08:00 – 10:30 WIB | Ruang Lab Komputer 1', color: 'bg-blue-50' },
-                { icon: FileText, title: 'Tugas Struktur Data', desc: 'Deadline: Hari ini, 23:59 WIB', color: 'bg-accent/30' },
-                { icon: CheckCircle, title: 'Status Pembayaran SPP', desc: 'Lunas untuk Semester Ganjil 2026/2027', color: 'bg-green-50' },
-              ].map((item, i) => (
-                <div key={i} className={`flex items-start gap-4 p-4 ${item.color} border-2 border-dashed border-muted`}>
-                  <div className="w-10 h-10 rounded-full bg-card border-drawn flex items-center justify-center flex-shrink-0">
-                    <item.icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-black text-lg">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <p className="font-cursive text-muted-foreground text-center py-8">Belum ada agenda hari ini.</p>
           </div>
+
         </div>
 
         {/* Right Column */}
