@@ -130,27 +130,33 @@ export default function Ujian() {
       {/* GPA Chart */}
       <div className="bg-card p-6 md:p-8 border-drawn shadow-sm relative mb-8 animate-fade-up" style={{ animationDelay: '300ms' }}>
         <h3 className="text-xl font-black italic mb-6">GRAFIK IPK PER SEMESTER</h3>
-        <div className="h-48 flex items-end gap-2 sm:gap-4 pt-4 border-b-2 border-l-2 border-foreground px-2 sm:px-4 pb-0 relative">
-          <div className="absolute -left-6 bottom-0 text-xs font-bold text-muted-foreground">0.0</div>
-          <div className="absolute -left-6 bottom-1/2 text-xs font-bold text-muted-foreground">2.0</div>
-          <div className="absolute -left-6 top-0 text-xs font-bold text-muted-foreground">4.0</div>
-          <div className="absolute left-0 right-0 bottom-1/2 border-t border-dashed border-muted -z-10" />
-          <div className="absolute left-0 right-0 top-0 border-t border-dashed border-muted -z-10" />
-          {semesters.map((sem, index) => {
-            const heightPercentage = (parseFloat(sem.gpa) / maxGpa) * 100;
-            return (
-              <div key={index} className="flex-1 flex flex-col items-center group">
-                <div className="relative w-full flex justify-center">
-                  <div className="w-full max-w-[40px] bg-accent border-2 border-foreground rounded-t-sm transition-all duration-500 ease-out group-hover:bg-secondary" style={{ height: `${heightPercentage}%`, minHeight: '4px' }}>
-                    <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-foreground text-primary-foreground text-xs font-bold px-2 py-1 pointer-events-none transition-opacity">{sem.gpa}</div>
+        {semesters.length === 0 ? (
+          <div className="py-12 text-center font-cursive text-muted-foreground">Belum ada data nilai. Klik "TAMBAH NILAI" untuk memulai.</div>
+        ) : (
+          <div className="h-56 flex items-end gap-2 sm:gap-4 pt-6 border-b-2 border-l-2 border-foreground pl-8 pr-2 sm:pr-4 pb-0 relative">
+            <div className="absolute left-1 bottom-0 text-xs font-bold text-muted-foreground">0.0</div>
+            <div className="absolute left-1 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">2.0</div>
+            <div className="absolute left-1 top-0 text-xs font-bold text-muted-foreground">4.0</div>
+            <div className="absolute left-8 right-0 top-1/2 border-t border-dashed border-muted -z-10" />
+            <div className="absolute left-8 right-0 top-0 border-t border-dashed border-muted -z-10" />
+            {semesters.map((sem, index) => {
+              const gpaNum = parseFloat(sem.gpa) || 0;
+              const heightPercentage = (gpaNum / maxGpa) * 100;
+              return (
+                <div key={index} className="flex-1 flex flex-col items-center group">
+                  <div className="relative w-full flex justify-center items-end" style={{ height: '100%' }}>
+                    <div className="w-full max-w-[40px] bg-accent border-2 border-foreground rounded-t-sm transition-all duration-500 ease-out group-hover:bg-secondary relative" style={{ height: `${heightPercentage}%`, minHeight: '4px' }}>
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-foreground text-primary-foreground text-xs font-bold px-2 py-0.5 pointer-events-none whitespace-nowrap">{sem.gpa}</div>
+                    </div>
                   </div>
+                  <div className="mt-2 text-xs font-bold text-muted-foreground">Smt {sem.semester}</div>
                 </div>
-                <div className="mt-2 text-xs font-bold text-muted-foreground">Smt {sem.semester}</div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
+
 
       {/* Transcript Accordion */}
       <div className="space-y-4 animate-fade-up" style={{ animationDelay: '400ms' }}>
