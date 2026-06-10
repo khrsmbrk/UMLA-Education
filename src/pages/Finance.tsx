@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { DollarSign, FileText, Download, CheckCircle, AlertCircle, CreditCard, Plus, X, Paperclip } from 'lucide-react';
 import { toast } from 'sonner';
 import { Transaction } from '@/types/study';
-import { getStoredData, saveStoredData } from '@/lib/mockStore';
+import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/lib/mockStore';
 
 const STORAGE_KEY_FINANCE = 'umla_finance_transactions';
 

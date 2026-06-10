@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Book, Plus, FileText, Calendar, X } from 'lucide-react';
-import { getStoredData, saveStoredData } from '@/lib/mockStore';
+import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/lib/mockStore';
 
 const STORAGE_KEY_NOTES = 'umla_notes';
 
