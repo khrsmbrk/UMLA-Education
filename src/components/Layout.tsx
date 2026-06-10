@@ -1,7 +1,7 @@
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { LayoutDashboard, BookOpen, LogOut, Bell, Menu, Calendar, CreditCard, CheckCircle, FileText, GraduationCap, Book, Monitor, Settings, X, Search } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import { getAnnouncements, getProfile } from '@/lib/mockStore';
+import { getAnnouncements, getProfile, getCurrentUserId, logoutUser } from '@/lib/mockStore';
 import { Announcement } from '@/types/study';
 
 const kategoriColor = (k: string) => {
