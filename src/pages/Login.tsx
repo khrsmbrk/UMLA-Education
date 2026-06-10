@@ -25,10 +25,17 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg('');
+    setSuccessMsg('');
     setTimeout(() => {
+      const result = loginUser(username, password);
       setIsLoading(false);
-      navigate('/app/dashboard');
-    }, 800);
+      if (!result.ok) {
+        setErrorMsg(result.error || 'Login gagal');
+        return;
+      }
+      setSuccessMsg('Berhasil login! Mengarahkan...');
+      setTimeout(() => navigate('/app/dashboard'), 400);
+    }, 500);
   };
 
   return (
