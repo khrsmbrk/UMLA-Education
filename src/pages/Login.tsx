@@ -129,7 +129,7 @@ export default function Login() {
                 <div>
                   <label className="inline-block bg-orange-200 px-2 py-1 text-sm font-bold border-drawn transform -rotate-1 mb-2">Username</label>
                   <input type="text" required value={username} onChange={(e) => setUsername(e.target.value)}
-                    className="w-full bg-transparent border-b-2 border-foreground border-dashed py-2 focus:outline-none focus:border-solid font-cursive text-2xl placeholder:text-muted-foreground/40" placeholder="Type your username..." />
+                    className="w-full bg-transparent border-b-2 border-foreground border-dashed py-2 focus:outline-none focus:border-solid font-cursive text-2xl placeholder:text-muted-foreground/40" placeholder="email / NIM..." />
                 </div>
                 <div>
                   <label className="inline-block bg-blue-200 px-2 py-1 text-sm font-bold border-drawn transform rotate-1 mb-2">Secret Password</label>
