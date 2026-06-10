@@ -4,14 +4,8 @@ import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/
 
 const STORAGE_KEY_COURSES = 'umla_courses';
 
-const MOCK_COURSES = [
-  { id: '1', name: 'Struktur Data', sks: 4, semester: 3, code: 'IF301' },
-  { id: '2', name: 'Basis Data', sks: 3, semester: 3, code: 'IF204' },
-  { id: '3', name: 'Kalkulus II', sks: 3, semester: 2, code: 'MA102' },
-  { id: '4', name: 'Algoritma & Pemrograman', sks: 4, semester: 2, code: 'IF201' },
-  { id: '5', name: 'Fisika Dasar', sks: 3, semester: 1, code: 'FI101' },
-  { id: '6', name: 'Bahasa Inggris', sks: 2, semester: 1, code: 'EN101' },
-];
+type CourseItem = { id: string; name: string; sks: number; semester: number; code: string };
+const MOCK_COURSES: CourseItem[] = [];
 
 export default function Courses() {
   const [courses, setCourses] = useState(() => getStoredData(STORAGE_KEY_COURSES, MOCK_COURSES));
