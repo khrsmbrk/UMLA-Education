@@ -1,25 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Calendar as CalendarIcon, Clock, MapPin, User, ChevronRight, Star, Plus, X } from 'lucide-react';
+import { getUserData, saveUserData } from '@/lib/mockStore';
 
 const DAYS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 const COLORS = ['bg-blue-100', 'bg-accent/50', 'bg-green-100', 'bg-purple-100', 'bg-orange-100'];
 
-const STORAGE_KEY = 'umla_schedule';
+const STORAGE_KEY = 'schedule';
 
 export default function Schedule() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [schedule, setSchedule] = useState<any[]>(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [schedule, setSchedule] = useState<any[]>(() => getUserData<any[]>(STORAGE_KEY, []));
   const [newSlot, setNewSlot] = useState({ dayOfWeek: 'MONDAY', startTime: '', endTime: '', location: '', type: 'ON-SITE', courseName: '' });
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
+    saveUserData(STORAGE_KEY, schedule);
   }, [schedule]);
 
   const groupedSchedule = DAYS.map(day => ({
