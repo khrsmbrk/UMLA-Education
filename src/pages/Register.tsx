@@ -90,6 +90,7 @@ export default function Register() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {successMsg && <div className="bg-green-100 border-2 border-green-500 text-green-700 p-3 font-bold text-sm">{successMsg}</div>}
+              {errorMsg && <div className="bg-red-50 border-2 border-destructive text-destructive p-3 font-bold text-sm">{errorMsg}</div>}
 
               <div>
                 <label className="inline-block bg-orange-200 px-2 py-1 text-sm font-bold border-drawn transform -rotate-1 mb-2">Full Name</label>
