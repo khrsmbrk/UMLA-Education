@@ -1,22 +1,22 @@
 import { BarChart3, TrendingUp, Clock, CalendarDays, Activity } from 'lucide-react';
 
 const stats = {
-  totalHours: 142.5,
-  weeklyAverage: 28.4,
-  currentStreak: 15,
-  longestStreak: 21,
-  mostStudiedSubject: 'Computer Science',
-  completionRate: 85,
+  totalHours: 0,
+  weeklyAverage: 0,
+  currentStreak: 0,
+  longestStreak: 0,
+  mostStudiedSubject: '-',
+  completionRate: 0,
 };
 
 const weeklyData = [
-  { day: 'Mon', hours: 4.2 },
-  { day: 'Tue', hours: 5.1 },
-  { day: 'Wed', hours: 3.8 },
-  { day: 'Thu', hours: 6.0 },
-  { day: 'Fri', hours: 4.5 },
-  { day: 'Sat', hours: 2.1 },
-  { day: 'Sun', hours: 3.7 },
+  { day: 'Mon', hours: 0 },
+  { day: 'Tue', hours: 0 },
+  { day: 'Wed', hours: 0 },
+  { day: 'Thu', hours: 0 },
+  { day: 'Fri', hours: 0 },
+  { day: 'Sat', hours: 0 },
+  { day: 'Sun', hours: 0 },
 ];
 
 export default function Stats() {
