@@ -60,8 +60,13 @@ export default function Layout() {
   }, [location.pathname]);
 
   const handleLogout = () => {
+    logoutUser();
     navigate('/login');
   };
+
+  if (!getCurrentUserId()) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-background bg-dot-pattern font-sans text-foreground">
