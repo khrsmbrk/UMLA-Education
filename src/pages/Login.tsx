@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Key, BookOpen, Mail, Globe, FileEdit, Monitor, Database } from 'lucide-react';
 import campusGraduation from '@/assets/campus-graduation.jpg';
+import { loginUser } from '@/lib/mockStore';
 
 function UserIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
