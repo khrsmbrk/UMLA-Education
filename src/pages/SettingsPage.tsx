@@ -178,12 +178,12 @@ export default function SettingsPage() {
               </tr>
             </thead>
             <tbody>
-              {[{ id: 'current', ...profile, joinedAt: new Date(profile.joinedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }, ...activeUsers.filter(u => u.id !== 'current')].map((user, i, list) => (
+              {activeUsers.map((user, i, list) => (
                 <tr key={user.id} className={`hover:bg-muted transition-colors ${i < list.length - 1 ? 'border-b border-muted' : ''}`}>
                   <td className="p-4 font-bold text-foreground">{user.name}</td>
                   <td className="p-4 font-mono text-sm text-muted-foreground hidden sm:table-cell">{user.nim}</td>
                   <td className="p-4 font-mono text-sm text-muted-foreground hidden md:table-cell">{user.email}</td>
-                  <td className="p-4 text-sm text-muted-foreground hidden md:table-cell">{user.joinedAt}</td>
+                  <td className="p-4 text-sm text-muted-foreground hidden md:table-cell">{formatJoined(user.joinedAt)}</td>
                 </tr>
               ))}
             </tbody>
