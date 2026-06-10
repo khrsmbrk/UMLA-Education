@@ -2,22 +2,25 @@ import { useState, useRef, useEffect } from 'react';
 import { Settings as SettingsIcon, Users, CheckCircle, X, Plus, Trash2, Edit2, Bell, User, Lock, LogOut, Camera } from 'lucide-react';
 import { toast } from 'sonner';
 import { Announcement } from '@/types/study';
-import { getAnnouncements, saveAnnouncements, getProfile, saveProfile, getStoredData, saveStoredData } from '@/lib/mockStore';
+import { getAnnouncements, saveAnnouncements, getProfile, saveProfile, getAllUsers, approveUser, changePassword, logoutUser, StoredUser } from '@/lib/mockStore';
 
 const KATEGORI_OPTIONS: Announcement['kategori'][] = ['Akademik', 'Umum', 'Keuangan', 'Sistem'];
-const STORE_KEY_PENDING_USERS = 'umla_pending_users';
-const STORE_KEY_ACTIVE_USERS = 'umla_active_users';
 
 function getToday() {
   return new Date().toISOString().split('T')[0];
 }
 
+function formatJoined(d: string) {
+  try { return new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }); } catch { return d; }
+}
+
 export default function SettingsPage() {
-  // === User Approval ===
-  const [pendingUsers, setPendingUsers] = useState<any[]>(() => getStoredData(STORE_KEY_PENDING_USERS, []));
-  const [activeUsers, setActiveUsers] = useState<any[]>(() => getStoredData(STORE_KEY_ACTIVE_USERS, [
-    { id: '1', name: 'Ahmad Fauzi', nim: 'ahmadfauzi', email: 'demo@example.com', joinedAt: '30 Maret 2026' },
-  ]));
+  // === User registry ===
+  const [users, setUsers] = useState<StoredUser[]>(() => getAllUsers());
+  const reloadUsers = () => setUsers(getAllUsers());
+
+  const pendingUsers = users.filter(u => u.status === 'pending');
+  const activeUsers = users.filter(u => u.status === 'active');
 
   // === Account Settings ===
   const [profile, setProfile] = useState(getProfile());
@@ -34,13 +37,10 @@ export default function SettingsPage() {
   const [announcementForm, setAnnouncementForm] = useState({ judul: '', isi: '', kategori: 'Akademik' as Announcement['kategori'], tanggal: getToday(), aktif: true });
 
   useEffect(() => { saveAnnouncements(announcements); }, [announcements]);
-  useEffect(() => { saveStoredData(STORE_KEY_PENDING_USERS, pendingUsers); }, [pendingUsers]);
-  useEffect(() => { saveStoredData(STORE_KEY_ACTIVE_USERS, activeUsers); }, [activeUsers]);
 
   const handleApproveUser = (id: string) => {
-    const approved = pendingUsers.find(u => u.id === id);
-    if (approved) setActiveUsers(prev => [{ ...approved, joinedAt: approved.joinedAt || new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }, ...prev]);
-    setPendingUsers(pendingUsers.filter(u => u.id !== id));
+    approveUser(id);
+    reloadUsers();
     toast.success('Pengguna disetujui!');
   };
 
@@ -59,6 +59,7 @@ export default function SettingsPage() {
 
   const handleSaveProfile = () => {
     saveProfile(profile);
+    reloadUsers();
     toast.success('Profil berhasil disimpan!');
   };
 
@@ -66,14 +67,16 @@ export default function SettingsPage() {
     e.preventDefault();
     if (newPassword.length < 8) { toast.error('Password baru minimal 8 karakter!'); return; }
     if (newPassword !== confirmPassword) { toast.error('Konfirmasi password tidak cocok!'); return; }
-    console.log('Password changed (simulated)', { oldPassword, newPassword });
+    const res = changePassword(oldPassword, newPassword);
+    if (!res.ok) { toast.error(res.error || 'Gagal ubah password'); return; }
     toast.success('Password berhasil diubah!');
     setOldPassword(''); setNewPassword(''); setConfirmPassword('');
   };
 
   const handleLogoutAll = () => {
-    toast.success('Logout dari semua sesi...');
-    setTimeout(() => { window.location.href = '/login'; }, 1000);
+    logoutUser();
+    toast.success('Logout berhasil...');
+    setTimeout(() => { window.location.href = '/login'; }, 800);
   };
 
   // Announcement handlers
