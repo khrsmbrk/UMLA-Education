@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Clock, Play, Pause, RotateCcw, FileEdit, Monitor, Database, Mail,
   Link as LinkIcon, Plus, X, AlertTriangle, CheckCircle, Calendar as CalendarIcon, FileText
 } from 'lucide-react';
-import { getAnnouncements, getProfile, getStoredData, saveStoredData } from '@/lib/mockStore';
+import { getAnnouncements, getProfile, getUserData as getStoredData, saveUserData as saveStoredData } from '@/lib/mockStore';
 
 const STORAGE_KEY_LINKS = 'umla_dashboard_links';
 const STORAGE_KEY_DEFAULT_LOGIN = 'umla_default_login';
