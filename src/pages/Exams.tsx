@@ -4,12 +4,8 @@ import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/
 
 const STORAGE_KEY_EXAMS = 'umla_exams';
 
-const MOCK_EXAMS = [
-  { id: '1', title: 'UTS Struktur Data', type: 'MIDTERM', date: '2026-04-05', status: 'UPCOMING', course: { code: 'IF301' } },
-  { id: '2', title: 'Quiz Basis Data #3', type: 'QUIZ', date: '2026-03-28', status: 'UPCOMING', course: { code: 'IF204' } },
-  { id: '3', title: 'UAS Kalkulus II', type: 'FINAL', date: '2026-06-15', status: 'UPCOMING', course: { code: 'MA102' } },
-  { id: '4', title: 'Praktikum Fisika', type: 'PRACTICAL', date: '2026-03-10', status: 'FINISHED', course: { code: 'FI101' } },
-];
+type ExamItem = { id: string; title: string; type: string; date: string; status: string; course: { code: string } | null };
+const MOCK_EXAMS: ExamItem[] = [];
 
 export default function Exams() {
   const [exams, setExams] = useState(() => getStoredData(STORAGE_KEY_EXAMS, MOCK_EXAMS));

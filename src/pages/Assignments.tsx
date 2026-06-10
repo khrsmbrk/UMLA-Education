@@ -4,12 +4,8 @@ import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/
 
 const STORAGE_KEY_ASSIGNMENTS = 'umla_assignments';
 
-const MOCK_ASSIGNMENTS = [
-  { id: '1', title: 'Essay Struktur Data - Linked List', description: 'Tulis essay tentang implementasi linked list', status: 'NOT_STARTED', dueDate: '2026-03-30', course: { name: 'Struktur Data' } },
-  { id: '2', title: 'Tugas SQL Query Joins', description: 'Selesaikan 10 soal JOIN query', status: 'NOT_STARTED', dueDate: '2026-04-02', course: { name: 'Basis Data' } },
-  { id: '3', title: 'Laporan Praktikum Fisika', description: null, status: 'COMPLETED', dueDate: '2026-03-18', course: { name: 'Fisika Dasar' } },
-  { id: '4', title: 'Tugas Integral Kalkulus', description: 'Halaman 120-125', status: 'NOT_STARTED', dueDate: '2026-04-05', course: { name: 'Kalkulus II' } },
-];
+type AssignmentItem = { id: string; title: string; description: string | null; status: string; dueDate: string; course: { name: string } | null };
+const MOCK_ASSIGNMENTS: AssignmentItem[] = [];
 
 export default function Assignments() {
   const [assignments, setAssignments] = useState(() => getStoredData(STORAGE_KEY_ASSIGNMENTS, MOCK_ASSIGNMENTS));

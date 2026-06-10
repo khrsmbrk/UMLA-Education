@@ -28,47 +28,7 @@ function parseNilai(raw: string): number {
   return isNaN(n) ? 0 : Math.max(0, Math.min(4, n));
 }
 
-const INITIAL_SEMESTERS: Semester[] = [
-  {
-    semester: '1', gpa: '3.87',
-    records: [
-      { id: 's1-1', matkul: 'KOMUNIKASI KESEHATAN', kode: '22WF0101', sks: 3, grade: 'AB', score: 3.5, nilaiAngka: 3.5, nilaiHuruf: 'AB' },
-      { id: 's1-2', matkul: 'AIK 1 : KEMANUSIAAN DAN KEIMANAN', kode: '22WI0001', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's1-3', matkul: 'BAHASA INGGRIS', kode: '22WI0006', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's1-4', matkul: 'BIOSCIENCE', kode: '22WP0301', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's1-5', matkul: 'DASAR ADMINISTRASI DAN MANAJEMEN', kode: '22WP0302', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's1-6', matkul: 'ANTROPOLOGI KESEHATAN', kode: '22WP0303', sks: 2, grade: 'AB', score: 3.5, nilaiAngka: 3.5, nilaiHuruf: 'AB' },
-      { id: 's1-7', matkul: 'PERATURAN DAN KEBIJAKAN KESEHATAN', kode: '22WP0304', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's1-8', matkul: 'PANCASILA', kode: '22WU0002', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-    ],
-  },
-  {
-    semester: '2', gpa: '3.66',
-    records: [
-      { id: 's2-1', matkul: 'AIK 2 : IBADAH, AKHLAK DAN MUAMALAH', kode: '22WI0002', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's2-2', matkul: 'PERILAKU ORGANISASI', kode: '22WP0305', sks: 2, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
-      { id: 's2-3', matkul: 'ADMINISTRASI RS', kode: '22WP0306', sks: 3, grade: 'AB', score: 3.5, nilaiAngka: 3.5, nilaiHuruf: 'AB' },
-      { id: 's2-4', matkul: 'ETIKA PROFESI ARS DAN HUKUM KESEHATAN', kode: '22WP0307', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's2-5', matkul: 'MANAJEMEN SIM RS', kode: '22WP0308', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's2-6', matkul: 'ILMU KESEHATAN MASYARAKAT', kode: '22WP0309', sks: 2, grade: 'AB', score: 3.5, nilaiAngka: 3.5, nilaiHuruf: 'AB' },
-      { id: 's2-7', matkul: 'EPIDEMIOLOGI', kode: '22WP0310', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's2-8', matkul: 'SISTEM ASURANSI KESEHATAN', kode: '22WP0311', sks: 2, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
-    ],
-  },
-  {
-    semester: '3', gpa: '3.59',
-    records: [
-      { id: 's3-1', matkul: 'AIK 3 : KEMUHAMMADIYAHAN', kode: '22WI0003', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's3-2', matkul: 'MANAJEMEN REKAM MEDIS', kode: '22WP0312', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's3-3', matkul: 'SISTEM PERENCANAAN RS', kode: '22WP0313', sks: 3, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
-      { id: 's3-4', matkul: 'MANAJEMEN BISNIS RS', kode: '22WP0314', sks: 3, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
-      { id: 's3-5', matkul: 'ANGGARAN DAN INDIKATOR KINERJA RS', kode: '22WP0315', sks: 2, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's3-6', matkul: 'MANAJEMEN K3 RS', kode: '22WP0316', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's3-7', matkul: 'MANAJEMEN KESLING DAN LIMBAH RS', kode: '22WP0317', sks: 3, grade: 'A', score: 4.0, nilaiAngka: 4.0, nilaiHuruf: 'A' },
-      { id: 's3-8', matkul: 'MANAJEMEN KOMPLAIN DAN CS', kode: '22WP0318', sks: 3, grade: 'B', score: 3.0, nilaiAngka: 3.0, nilaiHuruf: 'B' },
-    ],
-  },
-];
+const INITIAL_SEMESTERS: Semester[] = [];
 
 function calcGpa(records: CourseGrade[]) {
   const totalWeight = records.reduce((s, r) => s + r.sks * r.score, 0);
@@ -170,27 +130,33 @@ export default function Ujian() {
       {/* GPA Chart */}
       <div className="bg-card p-6 md:p-8 border-drawn shadow-sm relative mb-8 animate-fade-up" style={{ animationDelay: '300ms' }}>
         <h3 className="text-xl font-black italic mb-6">GRAFIK IPK PER SEMESTER</h3>
-        <div className="h-48 flex items-end gap-2 sm:gap-4 pt-4 border-b-2 border-l-2 border-foreground px-2 sm:px-4 pb-0 relative">
-          <div className="absolute -left-6 bottom-0 text-xs font-bold text-muted-foreground">0.0</div>
-          <div className="absolute -left-6 bottom-1/2 text-xs font-bold text-muted-foreground">2.0</div>
-          <div className="absolute -left-6 top-0 text-xs font-bold text-muted-foreground">4.0</div>
-          <div className="absolute left-0 right-0 bottom-1/2 border-t border-dashed border-muted -z-10" />
-          <div className="absolute left-0 right-0 top-0 border-t border-dashed border-muted -z-10" />
-          {semesters.map((sem, index) => {
-            const heightPercentage = (parseFloat(sem.gpa) / maxGpa) * 100;
-            return (
-              <div key={index} className="flex-1 flex flex-col items-center group">
-                <div className="relative w-full flex justify-center">
-                  <div className="w-full max-w-[40px] bg-accent border-2 border-foreground rounded-t-sm transition-all duration-500 ease-out group-hover:bg-secondary" style={{ height: `${heightPercentage}%`, minHeight: '4px' }}>
-                    <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-foreground text-primary-foreground text-xs font-bold px-2 py-1 pointer-events-none transition-opacity">{sem.gpa}</div>
+        {semesters.length === 0 ? (
+          <div className="py-12 text-center font-cursive text-muted-foreground">Belum ada data nilai. Klik "TAMBAH NILAI" untuk memulai.</div>
+        ) : (
+          <div className="h-56 flex items-end gap-2 sm:gap-4 pt-6 border-b-2 border-l-2 border-foreground pl-8 pr-2 sm:pr-4 pb-0 relative">
+            <div className="absolute left-1 bottom-0 text-xs font-bold text-muted-foreground">0.0</div>
+            <div className="absolute left-1 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">2.0</div>
+            <div className="absolute left-1 top-0 text-xs font-bold text-muted-foreground">4.0</div>
+            <div className="absolute left-8 right-0 top-1/2 border-t border-dashed border-muted -z-10" />
+            <div className="absolute left-8 right-0 top-0 border-t border-dashed border-muted -z-10" />
+            {semesters.map((sem, index) => {
+              const gpaNum = parseFloat(sem.gpa) || 0;
+              const heightPercentage = (gpaNum / maxGpa) * 100;
+              return (
+                <div key={index} className="flex-1 flex flex-col items-center group">
+                  <div className="relative w-full flex justify-center items-end" style={{ height: '100%' }}>
+                    <div className="w-full max-w-[40px] bg-accent border-2 border-foreground rounded-t-sm transition-all duration-500 ease-out group-hover:bg-secondary relative" style={{ height: `${heightPercentage}%`, minHeight: '4px' }}>
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-foreground text-primary-foreground text-xs font-bold px-2 py-0.5 pointer-events-none whitespace-nowrap">{sem.gpa}</div>
+                    </div>
                   </div>
+                  <div className="mt-2 text-xs font-bold text-muted-foreground">Smt {sem.semester}</div>
                 </div>
-                <div className="mt-2 text-xs font-bold text-muted-foreground">Smt {sem.semester}</div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
+
 
       {/* Transcript Accordion */}
       <div className="space-y-4 animate-fade-up" style={{ animationDelay: '400ms' }}>

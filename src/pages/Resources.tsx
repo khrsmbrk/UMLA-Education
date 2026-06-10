@@ -4,13 +4,8 @@ import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/
 
 const STORAGE_KEY_RESOURCES = 'umla_resources';
 
-const MOCK_RESOURCES = [
-  { id: '1', title: 'React Documentation', type: 'LINK', url: 'https://react.dev', course: { code: 'IF301' } },
-  { id: '2', title: 'Database Systems PDF', type: 'PDF', url: 'https://example.com/db.pdf', course: { code: 'IF204' } },
-  { id: '3', title: 'MIT OpenCourseWare - Algorithms', type: 'VIDEO', url: 'https://ocw.mit.edu', course: null },
-  { id: '4', title: 'Clean Code by Robert Martin', type: 'BOOK', url: 'https://example.com/book', course: null },
-  { id: '5', title: 'TypeScript Handbook', type: 'LINK', url: 'https://typescriptlang.org', course: { code: 'IF301' } },
-];
+type ResourceItem = { id: string; title: string; type: string; url: string; course: { code: string } | null };
+const MOCK_RESOURCES: ResourceItem[] = [];
 
 const getResourceIcon = (type: string) => {
   switch (type) {

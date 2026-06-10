@@ -6,11 +6,7 @@ import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/
 
 const STORAGE_KEY_FINANCE = 'umla_finance_transactions';
 
-const MOCK_TRANSACTIONS: Transaction[] = [
-  { id: '1', title: 'Pembayaran UKT Semester 3', amount: 4500000, status: 'PAID', category: 'UKT', invoiceNumber: 'INV-2026-001', createdAt: '2026-01-15' },
-  { id: '2', title: 'Pembayaran UKT Semester 4', amount: 4500000, status: 'UNPAID', category: 'UKT', invoiceNumber: 'INV-2026-002', createdAt: '2026-03-01' },
-  { id: '3', title: 'Denda keterlambatan', amount: 250000, status: 'PAID', category: 'Denda', invoiceNumber: 'INV-2026-003', createdAt: '2026-02-10' },
-];
+const MOCK_TRANSACTIONS: Transaction[] = [];
 
 const formatCurrency = (amount: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
 const formatDate = (d: string) => d ? new Date(d).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
