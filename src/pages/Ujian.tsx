@@ -2,7 +2,7 @@ import { LineChart, Download, ChevronDown, ChevronUp, Plus, X, Edit2 } from 'luc
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { CourseGrade, Semester } from '@/types/study';
-import { getStoredData, saveStoredData } from '@/lib/mockStore';
+import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/lib/mockStore';
 
 const STORAGE_KEY_GRADES = 'umla_grades';
 

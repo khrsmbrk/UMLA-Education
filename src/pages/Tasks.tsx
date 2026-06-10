@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle, Plus, Calendar as CalendarIcon, X } from 'lucide-react';
-import { getStoredData, saveStoredData } from '@/lib/mockStore';
+import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/lib/mockStore';
 
 const STORAGE_KEY_TASKS = 'umla_tasks';
 

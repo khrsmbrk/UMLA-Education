@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, Globe, FileEdit, Monitor, Database, UserPlus } from 'lucide-react';
-import { getStoredData, saveStoredData } from '@/lib/mockStore';
-
-const STORE_KEY_PENDING_USERS = 'umla_pending_users';
+import { registerUser } from '@/lib/mockStore';
 
 export default function Register() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', nim: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMsg('');
+    setSuccessMsg('');
     setTimeout(() => {
-      const pendingUsers = getStoredData<any[]>(STORE_KEY_PENDING_USERS, []);
-      saveStoredData(STORE_KEY_PENDING_USERS, [
-        ...pendingUsers,
-        { id: Date.now().toString(), name: form.name, nim: form.nim, email: form.email, joinedAt: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) },
-      ]);
+      if (form.password.length < 8) {
+        setIsLoading(false);
+        setErrorMsg('Password minimal 8 karakter');
+        return;
+      }
+      const result = registerUser(form);
       setIsLoading(false);
-      setSuccessMsg('Registrasi berhasil! Silakan login setelah disetujui Admin.');
-      setTimeout(() => navigate('/login'), 2000);
-    }, 800);
+      if (!result.ok) {
+        setErrorMsg(result.error || 'Registrasi gagal');
+        return;
+      }
+      setSuccessMsg('Registrasi berhasil! Akun menunggu persetujuan Admin.');
+      setTimeout(() => navigate('/login'), 1800);
+    }, 500);
   };
 
   return (
@@ -84,6 +90,7 @@ export default function Register() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {successMsg && <div className="bg-green-100 border-2 border-green-500 text-green-700 p-3 font-bold text-sm">{successMsg}</div>}
+              {errorMsg && <div className="bg-red-50 border-2 border-destructive text-destructive p-3 font-bold text-sm">{errorMsg}</div>}
 
               <div>
                 <label className="inline-block bg-orange-200 px-2 py-1 text-sm font-bold border-drawn transform -rotate-1 mb-2">Full Name</label>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Monitor, Plus, Link as LinkIcon, File, Video, BookOpen, ExternalLink, X } from 'lucide-react';
-import { getStoredData, saveStoredData } from '@/lib/mockStore';
+import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/lib/mockStore';
 
 const STORAGE_KEY_RESOURCES = 'umla_resources';
 

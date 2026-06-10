@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BookOpen, Plus, X, GraduationCap, Hash } from 'lucide-react';
-import { getStoredData, saveStoredData } from '@/lib/mockStore';
+import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/lib/mockStore';
 
 const STORAGE_KEY_COURSES = 'umla_courses';
 

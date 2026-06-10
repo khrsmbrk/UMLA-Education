@@ -1,7 +1,7 @@
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { LayoutDashboard, BookOpen, LogOut, Bell, Menu, Calendar, CreditCard, CheckCircle, FileText, GraduationCap, Book, Monitor, Settings, X, Search } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import { getAnnouncements, getProfile } from '@/lib/mockStore';
+import { getAnnouncements, getProfile, getCurrentUserId, logoutUser } from '@/lib/mockStore';
 import { Announcement } from '@/types/study';
 
 const kategoriColor = (k: string) => {
@@ -60,8 +60,13 @@ export default function Layout() {
   }, [location.pathname]);
 
   const handleLogout = () => {
+    logoutUser();
     navigate('/login');
   };
+
+  if (!getCurrentUserId()) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-background bg-dot-pattern font-sans text-foreground">

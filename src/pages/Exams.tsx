@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { GraduationCap, Plus, Calendar, Clock, CheckCircle2, Circle, X } from 'lucide-react';
-import { getStoredData, saveStoredData } from '@/lib/mockStore';
+import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/lib/mockStore';
 
 const STORAGE_KEY_EXAMS = 'umla_exams';
 
