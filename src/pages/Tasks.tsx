@@ -4,11 +4,8 @@ import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/
 
 const STORAGE_KEY_TASKS = 'umla_tasks';
 
-const MOCK_TASKS = [
-  { id: '1', title: 'Get Practical Review From Teacher', course: { name: 'Manajemen Pelayanan Farmasi' }, priority: 'HIGH', status: 'NOT_STARTED', dueDate: '2026-04-01' },
-  { id: '2', title: 'Update Project Documentation', course: { name: 'Manajemen Promosi Kesehatan' }, priority: 'HIGH', status: 'NOT_STARTED', dueDate: '2026-04-02' },
-  { id: '3', title: 'Prepare Quarterly Report', course: null, priority: 'MEDIUM', status: 'IN_PROGRESS', dueDate: '2026-04-04' },
-];
+type TaskItem = { id: string; title: string; course: { name: string } | null; priority: string; status: string; dueDate: string };
+const MOCK_TASKS: TaskItem[] = [];
 
 export default function Tasks() {
   const [tasks, setTasks] = useState(() => getStoredData(STORAGE_KEY_TASKS, MOCK_TASKS));
