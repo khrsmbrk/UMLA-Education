@@ -4,12 +4,8 @@ import { getUserData as getStoredData, saveUserData as saveStoredData } from '@/
 
 const STORAGE_KEY_NOTES = 'umla_notes';
 
-const MOCK_NOTES = [
-  { id: '1', title: 'Chapter 1 - Intro to Algorithms', content: 'An algorithm is a step-by-step procedure for solving a problem. Key concepts: time complexity, space complexity, Big O notation...', updatedAt: '2026-03-20', course: { code: 'IF301' } },
-  { id: '2', title: 'Database Normalization', content: '1NF: Eliminate repeating groups\n2NF: Remove partial dependencies\n3NF: Remove transitive dependencies\nBCNF: Every determinant is a candidate key', updatedAt: '2026-03-18', course: { code: 'IF204' } },
-  { id: '3', title: 'React Hooks Summary', content: 'useState - state management\nuseEffect - side effects\nuseContext - context consumption\nuseRef - mutable refs\nuseMemo - memoization', updatedAt: '2026-03-15', course: null },
-  { id: '4', title: 'Linear Algebra Notes', content: 'Vectors, matrices, determinants, eigenvalues and eigenvectors. Key theorem: every square matrix has at least one eigenvalue.', updatedAt: '2026-03-12', course: { code: 'MA102' } },
-];
+type NoteItem = { id: string; title: string; content: string; updatedAt: string; course: { code: string } | null };
+const MOCK_NOTES: NoteItem[] = [];
 
 export default function Notes() {
   const [notes, setNotes] = useState(() => getStoredData(STORAGE_KEY_NOTES, MOCK_NOTES));
